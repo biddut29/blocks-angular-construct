@@ -83,7 +83,7 @@ import { FileItem } from '../../../../models/file-manager.model';
                     <ng-icon [name]="getFileIcon(item)" size="18" [class]="getIconColor(item)"></ng-icon>
                     <span class="font-medium text-gray-500 dark:text-gray-400 line-through truncate max-w-xs">{{ item.name }}</span>
                   </td>
-                  <td class="px-6 py-3 text-gray-500 capitalize">{{ item.type }}</td>
+                  <td class="px-6 py-3 text-gray-500 capitalize">{{ item.itemKind }}</td>
                   <td class="px-6 py-3 text-gray-500 text-xs">{{ item.updatedAt ?? item.createdAt | date:'mediumDate' }}</td>
                   <td class="px-6 py-3">
                     <div class="flex items-center justify-end gap-2">

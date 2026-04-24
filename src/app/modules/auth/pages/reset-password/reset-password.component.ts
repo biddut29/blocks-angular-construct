@@ -8,6 +8,7 @@ import { NgIf } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { lucideLock, lucideEye, lucideEyeOff, lucideLoader, lucideCheck } from '@ng-icons/lucide';
 import { AuthService } from '../../services/auth.service';
+import { idpErrorMessage } from '../../utils/idp-error.util';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password');
@@ -108,7 +109,10 @@ export class ResetPasswordComponent implements OnInit {
       password: this.form.value.password!,
     }).subscribe({
       next: () => { this.success.set(true); this.isLoading.set(false); },
-      error: err => { this.errorMessage.set(err?.error?.message ?? 'Reset failed.'); this.isLoading.set(false); },
+      error: err => {
+        this.errorMessage.set(idpErrorMessage(err, 'Reset failed.'));
+        this.isLoading.set(false);
+      },
     });
   }
 }

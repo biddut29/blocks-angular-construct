@@ -51,6 +51,29 @@ export interface ResetPasswordRequest {
   password: string;
 }
 
+/** React `ValidateActivationCode` response */
+export interface ActivationCodeExpirationResponse {
+  errors: unknown | null;
+  isSuccess: boolean;
+  userId: string;
+}
+
+/** React `accountActivation` → `/idp/v1/Iam/Activate` */
+export interface AccountActivationPayload {
+  firstname: string;
+  lastname: string;
+  password: string;
+  code: string;
+  captchaCode: string;
+  projectKey: string;
+}
+
+/** React `forgotPassword` Recover response */
+export interface ForgotPasswordResponse {
+  errors: unknown;
+  isSuccess: boolean;
+}
+
 export interface VerifyOtpRequest {
   email: string;
   otp: string;

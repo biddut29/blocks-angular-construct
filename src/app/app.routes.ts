@@ -133,6 +133,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'resetpassword',
+        loadComponent: () =>
+          import('./modules/auth/pages/reset-password/reset-password.component').then(
+            m => m.ResetPasswordComponent,
+          ),
+      },
+      {
         path: 'verify-otp',
         loadComponent: () =>
           import('./modules/auth/pages/verify-otp/verify-otp.component').then(
@@ -147,6 +154,20 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'activate',
+        loadComponent: () =>
+          import('./modules/auth/pages/account-activation/account-activation.component').then(
+            m => m.AccountActivationComponent,
+          ),
+      },
+      {
+        path: 'activate-failed',
+        loadComponent: () =>
+          import('./modules/auth/pages/activate-failed/activate-failed.component').then(
+            m => m.ActivateFailedComponent,
+          ),
+      },
+      {
         path: 'activation-success',
         loadComponent: () =>
           import('./modules/auth/pages/activation-success/activation-success.component').then(
@@ -154,7 +175,21 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'success',
+        loadComponent: () =>
+          import('./modules/auth/pages/activation-success/activation-success.component').then(
+            m => m.ActivationSuccessComponent,
+          ),
+      },
+      {
         path: 'email-sent',
+        loadComponent: () =>
+          import('./modules/auth/pages/email-sent/email-sent.component').then(
+            m => m.EmailSentComponent,
+          ),
+      },
+      {
+        path: 'sent-email',
         loadComponent: () =>
           import('./modules/auth/pages/email-sent/email-sent.component').then(
             m => m.EmailSentComponent,

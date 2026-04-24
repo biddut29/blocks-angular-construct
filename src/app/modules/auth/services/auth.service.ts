@@ -12,6 +12,9 @@ import {
   AuthTokens,
   User,
   ResetPasswordRequest,
+  ActivationCodeExpirationResponse,
+  AccountActivationPayload,
+  ForgotPasswordResponse,
 } from '../../../types/index';
 import { AUTH_ENDPOINTS } from '../../../constant/auth.constant';
 import { environment } from '@environments/environment';
@@ -109,14 +112,49 @@ export class AuthService {
     return this._http.post(AUTH_ENDPOINTS.signup, JSON.stringify(payload));
   }
 
-  /** React `forgotPassword` → `/idp/v1/Iam/Recover` */
-  forgotPassword(email: string): Observable<{ isSuccess: boolean; errors?: unknown }> {
+  /** React `forgotPassword` → `/idp/v1/Iam/Recover` (includes `captchaCode`, often `''`) */
+  forgotPassword(
+    email: string,
+    captchaCode = '',
+  ): Observable<ForgotPasswordResponse> {
     const payload = {
       email,
+      captchaCode,
       mailPurpose: 'RecoverAccount',
       projectKey: environment.xBlocksKey,
     };
-    return this._http.post(AUTH_ENDPOINTS.recover, JSON.stringify(payload));
+    return this._http.post<ForgotPasswordResponse>(
+      AUTH_ENDPOINTS.recover,
+      JSON.stringify(payload),
+    );
+  }
+
+  /** React `validateActivationCode` */
+  validateActivationCode(payload: {
+    activationCode: string;
+    projectKey: string;
+  }): Observable<ActivationCodeExpirationResponse> {
+    return this._http.post<ActivationCodeExpirationResponse>(
+      AUTH_ENDPOINTS.validateActivationCode,
+      JSON.stringify(payload),
+    );
+  }
+
+  /** React `accountActivation` → `/idp/v1/Iam/Activate` */
+  accountActivation(data: AccountActivationPayload): Observable<unknown> {
+    const payload = { ...data, preventPostEvent: true };
+    return this._http.post(AUTH_ENDPOINTS.activate, JSON.stringify(payload));
+  }
+
+  /** React `resendActivation` */
+  resendActivation(body: { userId: string; projectKey?: string }): Observable<unknown> {
+    return this._http.post(
+      AUTH_ENDPOINTS.resendActivation,
+      JSON.stringify({
+        userId: body.userId,
+        projectKey: body.projectKey ?? environment.xBlocksKey,
+      }),
+    );
   }
 
   /** React `resetPassword` → `/idp/v1/Iam/ResetPassword` */
@@ -130,15 +168,12 @@ export class AuthService {
     return this._http.post(AUTH_ENDPOINTS.resetPassword, JSON.stringify(payload));
   }
 
-  /** React `validateActivationCode` — used by verify-otp style flows when the value is an activation code */
+  /** Used by verify-otp when the value is an activation code (same endpoint as `validateActivationCode`). */
   verifyOtp(body: { email: string; otp: string }): Observable<unknown> {
-    return this._http.post(
-      AUTH_ENDPOINTS.validateActivationCode,
-      JSON.stringify({
-        activationCode: body.otp,
-        projectKey: environment.xBlocksKey,
-      }),
-    );
+    return this.validateActivationCode({
+      activationCode: body.otp,
+      projectKey: environment.xBlocksKey,
+    });
   }
 
   /** React `getAccount` — `/idp/v1/Iam/GetAccount` */
