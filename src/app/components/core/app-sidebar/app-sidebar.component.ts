@@ -2,15 +2,7 @@
 // Mirrors: react_Constract/src/components/core/app-sidebar/app-sidebar.tsx
 // — `MenuSection` ×2: CLOUD INTEGRATED vs DESIGN ONLY (`isIntegrated` on menu items)
 
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  inject,
-  computed,
-  signal,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, computed, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -117,11 +109,13 @@ import { SIDEBAR_MENU, SidebarMenuItem } from '../../../constant/sidebar-menu.co
                   <span
                     class="flex-1 text-left whitespace-nowrap transition-opacity duration-200"
                     [ngClass]="collapsed ? 'opacity-0 hidden' : 'opacity-100'"
-                  >{{ item.label }}</span>
+                    >{{ item.label }}</span
+                  >
                   <span
                     *ngIf="!collapsed && shouldShowAdminBadge(item)"
                     class="ml-1.5 text-[10px] px-1.5 py-0 rounded border border-primary/30 bg-primary/10 text-primary font-semibold"
-                  >Admin</span>
+                    >Admin</span
+                  >
                   <ng-icon
                     *ngIf="!collapsed"
                     name="lucideChevronDown"
@@ -160,11 +154,13 @@ import { SIDEBAR_MENU, SidebarMenuItem } from '../../../constant/sidebar-menu.co
                   <span
                     class="whitespace-nowrap transition-opacity duration-200"
                     [ngClass]="collapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'"
-                  >{{ item.label }}</span>
+                    >{{ item.label }}</span
+                  >
                   <span
                     *ngIf="!collapsed && shouldShowAdminBadge(item)"
                     class="ml-auto text-[10px] px-1.5 py-0 rounded border border-primary/30 bg-primary/10 text-primary font-semibold shrink-0"
-                  >Admin</span>
+                    >Admin</span
+                  >
                 </a>
               </ng-container>
             </li>
@@ -195,11 +191,11 @@ export class AppSidebarComponent {
   readonly menuSections = computed(() => [
     {
       title: 'CLOUD INTEGRATED',
-      items: SIDEBAR_MENU.filter(i => i.isIntegrated === true),
+      items: SIDEBAR_MENU.filter((i) => i.isIntegrated === true),
     },
     {
       title: 'DESIGN ONLY',
-      items: SIDEBAR_MENU.filter(i => i.isIntegrated !== true),
+      items: SIDEBAR_MENU.filter((i) => i.isIntegrated !== true),
     },
   ]);
 
@@ -217,9 +213,13 @@ export class AppSidebarComponent {
   }
 
   toggleExpanded(label: string): void {
-    this._expandedItems.update(set => {
+    this._expandedItems.update((set) => {
       const next = new Set(set);
-      next.has(label) ? next.delete(label) : next.add(label);
+      if (next.has(label)) {
+        next.delete(label);
+      } else {
+        next.add(label);
+      }
       return next;
     });
   }

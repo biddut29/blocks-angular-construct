@@ -99,23 +99,22 @@ export class AuthStore {
   canAccess(
     requiredRoles: string[] = [],
     requiredPermissions: string[] = [],
-    opt: 'all' | 'any' = 'any',
+    opt: 'all' | 'any' = 'any'
   ): boolean {
     const rList = this.userRoles();
     const perms = this._state().user?.permissions ?? [];
 
     if (opt === 'all') {
       const hasAllRoles =
-        requiredRoles.length === 0 || requiredRoles.every(r => rList.includes(r));
+        requiredRoles.length === 0 || requiredRoles.every((r) => rList.includes(r));
       const hasAllPerms =
-        requiredPermissions.length === 0 || requiredPermissions.every(p => perms.includes(p));
+        requiredPermissions.length === 0 || requiredPermissions.every((p) => perms.includes(p));
       return hasAllRoles && hasAllPerms;
     }
 
-    const hasAnyRole =
-      requiredRoles.length > 0 && requiredRoles.some(r => rList.includes(r));
+    const hasAnyRole = requiredRoles.length > 0 && requiredRoles.some((r) => rList.includes(r));
     const hasAnyPerm =
-      requiredPermissions.length > 0 && requiredPermissions.some(p => perms.includes(p));
+      requiredPermissions.length > 0 && requiredPermissions.some((p) => perms.includes(p));
     return hasAnyRole || hasAnyPerm;
   }
 
@@ -133,13 +132,13 @@ export class AuthStore {
     if (!u.memberships?.length || !token) return u.roles ?? [];
     const orgId = decodeJWT(token)?.org_id;
     if (!orgId) return u.roles ?? [];
-    const membership = u.memberships.find(m => m.orgId === orgId);
+    const membership = u.memberships.find((m) => m.orgId === orgId);
     if (membership?.roles?.length) return membership.roles;
     return u.roles ?? [];
   }
 
   private _update(partial: Partial<AuthState>): void {
-    this._state.update(s => {
+    this._state.update((s) => {
       const next = { ...s, ...partial };
       this._saveToStorage(next);
       return next;

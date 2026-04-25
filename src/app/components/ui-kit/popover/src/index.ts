@@ -8,4 +8,9 @@ export * from './lib/hlm-popover-content';
 export * from './lib/hlm-popover-portal';
 export * from './lib/hlm-popover-trigger';
 
-export const HlmPopoverImports = [HlmPopover, HlmPopoverContent, HlmPopoverPortal, HlmPopoverTrigger] as const;
+export const HlmPopoverImports = [
+  HlmPopover,
+  HlmPopoverContent,
+  HlmPopoverPortal,
+  HlmPopoverTrigger,
+] as const;

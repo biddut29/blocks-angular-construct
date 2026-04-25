@@ -2,7 +2,15 @@
 // Mirrors: react_Constract/src/modules/iam/pages/users-table/users-table.tsx
 // API: POST /idp/v1/Iam/GetUsers (same payload as React `getUsers`)
 
-import { Component, OnInit, inject, signal, computed, DestroyRef, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  DestroyRef,
+  HostListener,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
@@ -46,6 +54,8 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { IamService } from '../../services/iam.service';
 import { IamUser, CreateUserInput } from '../../../../models/iam.model';
+import { AuthService } from '../../../auth/services/auth.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-users-table',
@@ -55,6 +65,7 @@ import { IamUser, CreateUserInput } from '../../../../models/iam.model';
     FormsModule,
     ReactiveFormsModule,
     NgIconComponent,
+    TranslateModule,
     HlmInput,
     HlmButton,
     HlmLabel,
@@ -94,13 +105,13 @@ import { IamUser, CreateUserInput } from '../../../../models/iam.model';
       <div class="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 class="text-2xl font-bold tracking-tight text-foreground">
-            Identity Access Management
+            {{ 'IAM.TITLE' | translate }}
           </h1>
         </div>
         <hlm-dialog>
           <button hlmBtn hlmDialogTrigger class="inline-flex items-center gap-2">
             <ng-icon name="lucidePlus" class="h-4 w-4" />
-            Add User
+            {{ 'IAM.ADD_USER' | translate }}
           </button>
           <hlm-dialog-content *brnDialogContent="let ctx" class="sm:max-w-lg">
             <hlm-dialog-header>
@@ -120,11 +131,22 @@ import { IamUser, CreateUserInput } from '../../../../models/iam.model';
               </div>
               <div class="space-y-1">
                 <label hlmLabel>Email</label>
-                <input hlmInput type="email" formControlName="email" placeholder="alice@example.com" class="w-full" />
+                <input
+                  hlmInput
+                  type="email"
+                  formControlName="email"
+                  placeholder="alice@example.com"
+                  class="w-full"
+                />
               </div>
               <div class="space-y-1">
                 <label hlmLabel>Phone Number</label>
-                <input hlmInput formControlName="phoneNumber" placeholder="+1-555-0100" class="w-full" />
+                <input
+                  hlmInput
+                  formControlName="phoneNumber"
+                  placeholder="+1-555-0100"
+                  class="w-full"
+                />
               </div>
               <div class="space-y-1">
                 <label hlmLabel>Role</label>
@@ -140,7 +162,14 @@ import { IamUser, CreateUserInput } from '../../../../models/iam.model';
                 </hlm-select>
               </div>
               <hlm-dialog-footer class="gap-2">
-                <button type="button" hlmBtn variant="outline" (click)="ctx.close(); editingUser.set(null)">Cancel</button>
+                <button
+                  type="button"
+                  hlmBtn
+                  variant="outline"
+                  (click)="ctx.close(); editingUser.set(null)"
+                >
+                  Cancel
+                </button>
                 <button type="submit" hlmBtn [disabled]="userForm.invalid">
                   {{ editingUser() ? 'Save Changes' : 'Create User' }}
                 </button>
@@ -149,6 +178,47 @@ import { IamUser, CreateUserInput } from '../../../../models/iam.model';
           </hlm-dialog-content>
         </hlm-dialog>
       </div>
+
+      @if (bannerMessage()) {
+        <div
+          class="rounded-lg border border-border bg-card px-4 py-3 text-sm text-foreground shadow-sm"
+        >
+          {{ bannerMessage() | translate }}
+        </div>
+      }
+
+      @if (detailsUser()) {
+        <div class="rounded-lg border border-border bg-card p-4 shadow-sm">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <div class="text-base font-semibold text-foreground">
+                {{ displayName(detailsUser()!) }}
+              </div>
+              <div class="mt-1 text-sm text-muted-foreground">{{ detailsUser()!.email }}</div>
+              <div class="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                <span class="rounded-md border border-border px-2 py-0.5"
+                  >ID: {{ detailsUser()!.ItemId }}</span
+                >
+                <span class="rounded-md border border-border px-2 py-0.5"
+                  >MFA: {{ detailsUser()!.mfaEnabled ? 'Enabled' : 'Disabled' }}</span
+                >
+                <span class="rounded-md border border-border px-2 py-0.5"
+                  >Status: {{ detailsUser()!.active ? 'Active' : 'Inactive' }}</span
+                >
+              </div>
+            </div>
+            <button
+              hlmBtn
+              variant="outline"
+              size="sm"
+              type="button"
+              (click)="detailsUser.set(null)"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      }
 
       <!-- Toolbar (React IamTableToolbar layout) -->
       <div
@@ -207,7 +277,13 @@ import { IamUser, CreateUserInput } from '../../../../models/iam.model';
           Last Login
         </button>
         <div class="ml-auto flex items-center gap-2">
-          <button type="button" hlmBtn variant="outline" size="sm" class="h-9 gap-1.5 px-3 text-xs font-medium">
+          <button
+            type="button"
+            hlmBtn
+            variant="outline"
+            size="sm"
+            class="h-9 gap-1.5 px-3 text-xs font-medium"
+          >
             <ng-icon name="lucideSlidersHorizontal" class="h-3.5 w-3.5" />
             View
           </button>
@@ -226,25 +302,39 @@ import { IamUser, CreateUserInput } from '../../../../models/iam.model';
             <table class="w-full min-w-[720px] border-collapse text-sm">
               <thead>
                 <tr class="border-b border-border bg-muted/40">
-                  <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                  >
                     Name
                   </th>
-                  <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                  >
                     Email
                   </th>
-                  <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                  >
                     Mfa
                   </th>
-                  <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                  >
                     Joined On
                   </th>
-                  <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                  >
                     Last Login
                   </th>
-                  <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                  >
                     Status
                   </th>
-                  <th class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <th
+                    class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                  >
                     Actions
                   </th>
                 </tr>
@@ -259,14 +349,22 @@ import { IamUser, CreateUserInput } from '../../../../models/iam.model';
                         >
                           {{ userInitials(user) }}
                         </div>
-                        <span class="truncate font-medium text-foreground">{{ displayName(user) }}</span>
+                        <span class="truncate font-medium text-foreground">{{
+                          displayName(user)
+                        }}</span>
                       </div>
                     </td>
                     <td class="px-4 py-3">
-                      <span class="block max-w-[260px] truncate text-foreground">{{ user.email }}</span>
+                      <span class="block max-w-[260px] truncate text-foreground">{{
+                        user.email
+                      }}</span>
                     </td>
-                    <td class="px-4 py-3 text-foreground">{{ user.mfaEnabled ? 'Enabled' : 'Disabled' }}</td>
-                    <td class="px-4 py-3 text-muted-foreground">{{ formatDate(user.createdDate ?? user.createdAt) }}</td>
+                    <td class="px-4 py-3 text-foreground">
+                      {{ user.mfaEnabled ? 'Enabled' : 'Disabled' }}
+                    </td>
+                    <td class="px-4 py-3 text-muted-foreground">
+                      {{ formatDate(user.createdDate ?? user.createdAt) }}
+                    </td>
                     <td class="px-4 py-3 text-muted-foreground">
                       {{ formatLastLogin(user.lastLoggedInTime) }}
                     </td>
@@ -302,6 +400,31 @@ import { IamUser, CreateUserInput } from '../../../../models/iam.model';
                             (click)="editUser(user); openMenuUserId.set(null)"
                           >
                             <ng-icon name="lucidePencil" class="h-4 w-4" /> Edit
+                          </button>
+                          <button
+                            type="button"
+                            class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-muted"
+                            (click)="viewDetails(user); openMenuUserId.set(null)"
+                          >
+                            <ng-icon name="lucideUser" class="h-4 w-4" />
+                            {{ 'IAM.VIEW_DETAILS' | translate }}
+                          </button>
+                          <button
+                            type="button"
+                            class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-muted"
+                            (click)="resetPassword(user); openMenuUserId.set(null)"
+                          >
+                            <ng-icon name="lucideShieldCheck" class="h-4 w-4" />
+                            {{ 'IAM.RESET_PASSWORD' | translate }}
+                          </button>
+                          <button
+                            type="button"
+                            class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-destructive hover:bg-muted"
+                            (click)="deactivateUser(user); openMenuUserId.set(null)"
+                            [disabled]="!user.active"
+                          >
+                            <ng-icon name="lucideTrash2" class="h-4 w-4" />
+                            {{ 'IAM.DEACTIVATE_USER' | translate }}
                           </button>
                           <button
                             type="button"
@@ -405,6 +528,7 @@ export class UsersTableComponent implements OnInit {
   private readonly iamService = inject(IamService);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly authService = inject(AuthService);
 
   private readonly searchSubject = new Subject<string>();
 
@@ -415,6 +539,8 @@ export class UsersTableComponent implements OnInit {
   readonly loading = signal(false);
   readonly editingUser = signal<IamUser | null>(null);
   readonly openMenuUserId = signal<string | null>(null);
+  readonly detailsUser = signal<IamUser | null>(null);
+  readonly bannerMessage = signal('');
 
   searchDraft = '';
   readonly pageSizeOptions = [10, 20, 50];
@@ -440,7 +566,7 @@ export class UsersTableComponent implements OnInit {
   constructor() {
     this.searchSubject
       .pipe(debounceTime(450), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-      .subscribe(name => {
+      .subscribe((name) => {
         this.pageIndex.set(0);
         this.loadUsers(name);
       });
@@ -464,7 +590,7 @@ export class UsersTableComponent implements OnInit {
         filter: { name: nameFilter, email: '' },
       })
       .subscribe({
-        next: res => {
+        next: (res) => {
           this.users.set(res.items);
           this.totalCount.set(res.totalCount);
           this.loading.set(false);
@@ -491,12 +617,12 @@ export class UsersTableComponent implements OnInit {
   }
 
   goPrevPage(): void {
-    this.pageIndex.update(i => Math.max(0, i - 1));
+    this.pageIndex.update((i) => Math.max(0, i - 1));
     this.loadUsers(this.searchDraft.trim());
   }
 
   goNextPage(): void {
-    this.pageIndex.update(i => Math.min(this.totalPages() - 1, i + 1));
+    this.pageIndex.update((i) => Math.min(this.totalPages() - 1, i + 1));
     this.loadUsers(this.searchDraft.trim());
   }
 
@@ -506,7 +632,7 @@ export class UsersTableComponent implements OnInit {
   }
 
   toggleRowMenu(id: string): void {
-    this.openMenuUserId.update(cur => (cur === id ? null : id));
+    this.openMenuUserId.update((cur) => (cur === id ? null : id));
   }
 
   displayName(user: IamUser): string {
@@ -560,15 +686,17 @@ export class UsersTableComponent implements OnInit {
     };
 
     if (this.editingUser()) {
-      this.iamService.updateUser(this.editingUser()!.ItemId, input).subscribe(updated => {
-        this.users.update(list => list.map(u => (u.ItemId === updated.ItemId ? { ...u, ...updated } : u)));
+      this.iamService.updateUser(this.editingUser()!.ItemId, input).subscribe((updated) => {
+        this.users.update((list) =>
+          list.map((u) => (u.ItemId === updated.ItemId ? { ...u, ...updated } : u))
+        );
         this.editingUser.set(null);
         this.userForm.reset();
         ctx.close();
       });
     } else {
-      this.iamService.createUser(input).subscribe(newUser => {
-        this.users.update(list => [newUser, ...list]);
+      this.iamService.createUser(input).subscribe((newUser) => {
+        this.users.update((list) => [newUser, ...list]);
         this.userForm.reset();
         ctx.close();
       });
@@ -587,10 +715,41 @@ export class UsersTableComponent implements OnInit {
   }
 
   deleteUser(user: IamUser): void {
-    const confirmed = confirm(`Delete user ${this.displayName(user)}?`);
+    const confirmed = window.confirm(`Delete user ${this.displayName(user)}?`);
     if (!confirmed) return;
     this.iamService.deleteUser(user.ItemId).subscribe(() => {
       this.loadUsers(this.searchDraft.trim());
+    });
+  }
+
+  viewDetails(user: IamUser): void {
+    this.detailsUser.set(user);
+  }
+
+  resetPassword(user: IamUser): void {
+    const email = user?.email?.trim();
+    if (!email) return;
+    this.bannerMessage.set('');
+    this.authService.forgotPassword(email, '').subscribe({
+      next: () => {
+        this.bannerMessage.set('IAM.RESET_LINK_SENT');
+      },
+      error: () => {
+        this.bannerMessage.set('Could not send reset email.');
+      },
+    });
+  }
+
+  deactivateUser(user: IamUser): void {
+    if (!user?.ItemId || !user.active) return;
+    const confirmed = window.confirm(`Deactivate user ${this.displayName(user)}?`);
+    if (!confirmed) return;
+    this.iamService.updateUser(user.ItemId, { active: false }).subscribe({
+      next: (updated) => {
+        this.users.update((list) =>
+          list.map((u) => (u.ItemId === updated.ItemId ? { ...u, active: false } : u))
+        );
+      },
     });
   }
 

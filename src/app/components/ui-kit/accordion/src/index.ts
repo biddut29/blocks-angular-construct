@@ -9,4 +9,9 @@ export * from './lib/hlm-accordion-item';
 export * from './lib/hlm-accordion-trigger';
 
 /** Import this array (or individual classes) into any standalone feature component — same idea as React’s `Accordion` UI kit. */
-export const HlmAccordionImports = [HlmAccordion, HlmAccordionItem, HlmAccordionContent, HlmAccordionTrigger] as const;
+export const HlmAccordionImports = [
+  HlmAccordion,
+  HlmAccordionItem,
+  HlmAccordionContent,
+  HlmAccordionTrigger,
+] as const;

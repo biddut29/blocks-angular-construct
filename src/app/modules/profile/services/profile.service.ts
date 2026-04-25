@@ -50,22 +50,48 @@ export class ProfileService {
   }
 
   // ── Change Password ────────────────────────────────────────────────────────
-  changePassword(input: ChangePasswordInput): Observable<void> {
+  changePassword(_input: ChangePasswordInput): Observable<void> {
     // Mock — replace with actual HTTP/GraphQL call
     return of(void 0);
   }
 
   // ── Toggle MFA ─────────────────────────────────────────────────────────────
-  toggleMfa(enabled: boolean): Observable<void> {
+  toggleMfa(_enabled: boolean): Observable<void> {
     return of(void 0);
   }
 
   // ── Get Active Sessions ────────────────────────────────────────────────────
-  getActiveSessions(): Observable<{ sessionId: string; device: string; location: string; lastActive: string; isCurrent: boolean }[]> {
+  getActiveSessions(): Observable<
+    {
+      sessionId: string;
+      device: string;
+      location: string;
+      lastActive: string;
+      isCurrent: boolean;
+    }[]
+  > {
     return of([
-      { sessionId: 's-001', device: 'Chrome on Windows', location: 'New York, US', lastActive: new Date().toISOString(), isCurrent: true },
-      { sessionId: 's-002', device: 'Safari on iPhone', location: 'New York, US', lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), isCurrent: false },
-      { sessionId: 's-003', device: 'Firefox on Mac', location: 'San Francisco, US', lastActive: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), isCurrent: false },
+      {
+        sessionId: 's-001',
+        device: 'Chrome on Windows',
+        location: 'New York, US',
+        lastActive: new Date().toISOString(),
+        isCurrent: true,
+      },
+      {
+        sessionId: 's-002',
+        device: 'Safari on iPhone',
+        location: 'New York, US',
+        lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+        isCurrent: false,
+      },
+      {
+        sessionId: 's-003',
+        device: 'Firefox on Mac',
+        location: 'San Francisco, US',
+        lastActive: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+        isCurrent: false,
+      },
     ]);
   }
 }

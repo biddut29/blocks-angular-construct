@@ -4,7 +4,7 @@
 
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { HttpService } from './http.service';
 import type { GraphQLResponse } from '@app/types/index';
 import { environment } from '@environments/environment';
@@ -32,12 +32,12 @@ export class GraphQLService {
         variables: options.variables ?? {},
       })
       .pipe(
-        map(response => {
+        map((response) => {
           if (response.errors?.length) {
             throw new Error(response.errors[0].message);
           }
           return response.data;
-        }),
+        })
       );
   }
 
@@ -49,12 +49,12 @@ export class GraphQLService {
         variables: options.variables ?? {},
       })
       .pipe(
-        map(response => {
+        map((response) => {
           if (response.errors?.length) {
             throw new Error(response.errors[0].message);
           }
           return response.data;
-        }),
+        })
       );
   }
 }

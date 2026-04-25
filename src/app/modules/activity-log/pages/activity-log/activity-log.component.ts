@@ -3,27 +3,20 @@
 // + v1 timeline / toolbar (not the table layout).
 
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { lucideSearch, lucidePlusCircle, lucideCheck, lucideX } from '@ng-icons/lucide';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { getFormattedDateLabel } from '../../utils/activity-date-label.util';
-import { TIMELINE_ACTIVITIES_DATA, TIMELINE_MODULE_FILTER_IDS } from '../../data/timeline-activities.data';
+import {
+  TIMELINE_ACTIVITIES_DATA,
+  TIMELINE_MODULE_FILTER_IDS,
+} from '../../data/timeline-activities.data';
 import { ActivityGroup } from '../../types/activity-timeline.model';
 import { ActivityLogService } from '../../services/activity-log.service';
-import {
-  groupActivityLogsByDate,
-  mergeActivityGroups,
-} from '../../utils/map-activity-logs.util';
+import { groupActivityLogsByDate, mergeActivityGroups } from '../../utils/map-activity-logs.util';
 
 const transformCategory = (category: string) => category.toLowerCase().replace(/\s+/g, '_');
 
@@ -63,7 +56,7 @@ const transformCategory = (category: string) => category.toLowerCase().replace(/
               size="sm"
               type="button"
               class="h-8 border-dashed w-full sm:w-auto justify-center"
-              (click)="$event.stopPropagation(); datePanelOpen.update(v => !v)"
+              (click)="$event.stopPropagation(); datePanelOpen.update((v) => !v)"
             >
               <ng-icon name="lucidePlusCircle" class="w-4 h-4 mr-1 shrink-0" />
               Date
@@ -111,7 +104,7 @@ const transformCategory = (category: string) => category.toLowerCase().replace(/
               size="sm"
               type="button"
               class="h-8 border-dashed w-full sm:w-auto justify-center"
-              (click)="$event.stopPropagation(); modulePanelOpen.update(v => !v)"
+              (click)="$event.stopPropagation(); modulePanelOpen.update((v) => !v)"
             >
               <ng-icon name="lucidePlusCircle" class="w-4 h-4 mr-1 shrink-0" />
               Module
@@ -196,7 +189,9 @@ const transformCategory = (category: string) => category.toLowerCase().replace(/
                             <span class="font-normal text-muted-foreground">{{
                               formatTime(activity.time)
                             }}</span>
-                            <span class="h-2 w-2 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600"></span>
+                            <span
+                              class="h-2 w-2 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600"
+                            ></span>
                             <div
                               class="rounded px-2 py-0.5 text-sm font-semibold text-foreground bg-muted/80 border border-border/60"
                             >
@@ -253,7 +248,7 @@ export class ActivityLogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.recompute();
     this._activityLogService.getLogs({ pageNo: 1, pageSize: 100 }).subscribe({
-      next: res => {
+      next: (res) => {
         const apiGroups = groupActivityLogsByDate(res.items);
         this.baseGroups.set(mergeActivityGroups(TIMELINE_ACTIVITIES_DATA, apiGroups));
         this.recompute();
@@ -320,7 +315,7 @@ export class ActivityLogComponent implements OnInit, OnDestroy {
   }
 
   toggleModule(id: string): void {
-    this.selectedModules.update(s => {
+    this.selectedModules.update((s) => {
       const next = new Set(s);
       if (next.has(id)) next.delete(id);
       else next.add(id);
@@ -345,11 +340,8 @@ export class ActivityLogComponent implements OnInit, OnDestroy {
       const total = this._filtered().length;
       const loaded = this.visibleCount();
       if (loaded >= total) return;
-      if (
-        container.scrollHeight - container.scrollTop <=
-        container.clientHeight + threshold
-      ) {
-        this.visibleCount.update(c => Math.min(c + 5, total));
+      if (container.scrollHeight - container.scrollTop <= container.clientHeight + threshold) {
+        this.visibleCount.update((c) => Math.min(c + 5, total));
       }
     }, 200);
   }
@@ -367,10 +359,10 @@ export class ActivityLogComponent implements OnInit, OnDestroy {
       toMs = new Date(toStr + 'T23:59:59.999').getTime();
     }
 
-    let out = this.baseGroups().map(g => ({ ...g, items: [...g.items] }));
+    let out = this.baseGroups().map((g) => ({ ...g, items: [...g.items] }));
 
     if (hasRange) {
-      out = out.filter(g => {
+      out = out.filter((g) => {
         const t = new Date(g.date).getTime();
         return t >= fromMs && t <= toMs;
       });
@@ -378,20 +370,20 @@ export class ActivityLogComponent implements OnInit, OnDestroy {
 
     if (q) {
       out = out
-        .map(g => ({
+        .map((g) => ({
           ...g,
-          items: g.items.filter(i => i.description.toLowerCase().includes(q)),
+          items: g.items.filter((i) => i.description.toLowerCase().includes(q)),
         }))
-        .filter(g => g.items.length > 0);
+        .filter((g) => g.items.length > 0);
     }
 
     if (mods.size > 0) {
       out = out
-        .map(g => ({
+        .map((g) => ({
           ...g,
-          items: g.items.filter(i => mods.has(transformCategory(i.category))),
+          items: g.items.filter((i) => mods.has(transformCategory(i.category))),
         }))
-        .filter(g => g.items.length > 0);
+        .filter((g) => g.items.length > 0);
     }
 
     this._filtered.set(this.assignTrackIds(out));

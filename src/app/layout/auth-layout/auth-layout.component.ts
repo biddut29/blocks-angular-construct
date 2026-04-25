@@ -3,13 +3,7 @@
 // — Loads `GetLoginOptions` before showing routes; surfaces project-key / 5xx errors like React.
 
 import { DOCUMENT } from '@angular/common';
-import {
-  Component,
-  HostListener,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, HostListener, computed, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { lucideChevronDown, lucideMoon, lucideSun, lucideAlertTriangle } from '@ng-icons/lucide';
@@ -78,7 +72,9 @@ const THEME_STORAGE_KEY = 'theme';
 
           <div class="w-full max-w-xl">
             @if (loginPhase() === 'loading') {
-              <div class="flex min-h-[200px] items-center justify-center text-sm text-muted-foreground">
+              <div
+                class="flex min-h-[200px] items-center justify-center text-sm text-muted-foreground"
+              >
                 Loading…
               </div>
             } @else if (loginPhase() === 'project_error') {
@@ -88,7 +84,10 @@ const THEME_STORAGE_KEY = 'theme';
                 <div class="relative z-10">
                   <div class="mb-4 flex justify-center">
                     <div class="rounded-full bg-red-100 p-3 dark:bg-red-900/50">
-                      <ng-icon name="lucideAlertTriangle" class="h-8 w-8 text-red-600 dark:text-red-400" />
+                      <ng-icon
+                        name="lucideAlertTriangle"
+                        class="h-8 w-8 text-red-600 dark:text-red-400"
+                      />
                     </div>
                   </div>
                   <div class="space-y-4 text-center">
@@ -96,7 +95,9 @@ const THEME_STORAGE_KEY = 'theme';
                       Incorrect Project Key
                     </h2>
                     <div class="space-y-3 text-red-700 dark:text-red-300/90">
-                      <p class="text-base leading-relaxed">It seems your project is not set up in the Blocks Cloud.</p>
+                      <p class="text-base leading-relaxed">
+                        It seems your project is not set up in the Blocks Cloud.
+                      </p>
                       <p class="text-sm leading-relaxed">
                         Please create a project at
                         <a
@@ -123,16 +124,25 @@ const THEME_STORAGE_KEY = 'theme';
                 <div class="relative z-10">
                   <div class="mb-4 flex justify-center">
                     <div class="rounded-full bg-orange-100 p-3 dark:bg-orange-900/50">
-                      <ng-icon name="lucideAlertTriangle" class="h-8 w-8 text-orange-600 dark:text-orange-400" />
+                      <ng-icon
+                        name="lucideAlertTriangle"
+                        class="h-8 w-8 text-orange-600 dark:text-orange-400"
+                      />
                     </div>
                   </div>
                   <div class="space-y-4 text-center">
-                    <h2 class="text-2xl font-bold tracking-tight text-orange-900 dark:text-orange-200">
+                    <h2
+                      class="text-2xl font-bold tracking-tight text-orange-900 dark:text-orange-200"
+                    >
                       Services Temporarily Unavailable
                     </h2>
                     <div class="space-y-3 text-orange-700 dark:text-orange-300/90">
-                      <p class="text-base leading-relaxed">The services are temporarily unavailable.</p>
-                      <p class="text-base font-semibold leading-relaxed">Everything will be back to normal soon.</p>
+                      <p class="text-base leading-relaxed">
+                        The services are temporarily unavailable.
+                      </p>
+                      <p class="text-base font-semibold leading-relaxed">
+                        Everything will be back to normal soon.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -157,7 +167,7 @@ export class AuthLayoutComponent {
   readonly loginPhase = this._loginOptions.phase;
 
   readonly authBgSrc = computed(() =>
-    this._isDark() ? '/images/bg_auth_dark.svg' : '/images/bg_auth_light.svg',
+    this._isDark() ? '/images/bg_auth_dark.svg' : '/images/bg_auth_light.svg'
   );
 
   constructor() {

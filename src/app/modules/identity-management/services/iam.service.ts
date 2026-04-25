@@ -2,7 +2,7 @@
 // Mirrors: react_Constract/src/modules/iam/services/user-service.ts
 
 import { Injectable, inject } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpService } from '../../../lib/http.service';
 import {
@@ -12,8 +12,10 @@ import {
   GetUsersPayload,
 } from '../../../models/iam.model';
 import { PaginatedResponse } from '../../../types/index';
+import { environment } from '@environments/environment';
 
 const GET_USERS_PATH = '/idp/v1/Iam/GetUsers';
+const CREATE_USER_PATH = '/idp/v1/Iam/Create';
 
 function mapApiRow(row: Record<string, unknown>): IamUser {
   const itemId = String(row['itemId'] ?? row['ItemId'] ?? '');
@@ -62,53 +64,77 @@ export class IamService {
     };
 
     return this._http
-      .post<{ data: Record<string, unknown>[]; totalCount: number }>(
-        GET_USERS_PATH,
-        JSON.stringify(body),
-      )
+      .post<{
+        data: Record<string, unknown>[];
+        totalCount: number;
+      }>(GET_USERS_PATH, JSON.stringify(body))
       .pipe(
-        map(res => {
+        map((res) => {
           const rows = res.data ?? [];
           const totalCount = res.totalCount ?? 0;
           const pageSize = payload.pageSize;
           return {
-            items: rows.map(r => mapApiRow(r)),
+            items: rows.map((r) => mapApiRow(r)),
             totalCount,
             pageNo: payload.page + 1,
             pageSize,
             totalPages: Math.max(1, Math.ceil(totalCount / pageSize) || 1),
           } satisfies PaginatedResponse<IamUser>;
-        }),
+        })
       );
   }
 
   createUser(input: CreateUserInput): Observable<IamUser> {
-    const user: IamUser = {
-      ItemId: `u-${Date.now()}`,
+    const payload = {
       firstName: input.firstName,
       lastName: input.lastName,
       email: input.email,
-      userName: `${input.firstName.toLowerCase()}.${input.lastName.toLowerCase()}`,
-      phoneNumber: input.phoneNumber,
-      roles: input.roles,
-      permissions: input.permissions ?? ['read'],
-      active: true,
-      isVarified: false,
-      isMfaVerified: false,
-      mfaEnabled: false,
-      status: 'PENDING',
-      createdAt: new Date().toISOString(),
+      phoneNumber: input.phoneNumber ?? null,
+      roles: input.roles ?? [],
+      permissions: input.permissions ?? [],
+      projectKey: environment.xBlocksKey,
     };
-    return of(user);
+
+    return this._http
+      .post<{
+        itemId?: string;
+        errors?: unknown;
+        isSuccess?: boolean;
+      }>(CREATE_USER_PATH, JSON.stringify(payload))
+      .pipe(
+        map((res) => {
+          if (res?.isSuccess === false) {
+            throw new Error('Create user failed.');
+          }
+          const id = res?.itemId ?? '';
+          return {
+            ItemId: id || `u-${Date.now()}`,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            email: input.email,
+            userName: input.email,
+            phoneNumber: input.phoneNumber,
+            roles: input.roles ?? [],
+            permissions: input.permissions ?? [],
+            active: true,
+            isVarified: false,
+            isMfaVerified: false,
+            mfaEnabled: false,
+            status: 'PENDING',
+            createdAt: new Date().toISOString(),
+          } satisfies IamUser;
+        })
+      );
   }
 
   updateUser(id: string, input: UpdateUserInput): Observable<IamUser> {
+    if (!id) return throwError(() => new Error('User id is required.'));
     const updated: IamUser = {
       ItemId: id,
       firstName: input.firstName ?? '',
       lastName: input.lastName ?? '',
       email: input.email ?? '',
-      userName: '',
+      userName: input.email ?? '',
       roles: input.roles ?? [],
       permissions: input.permissions ?? [],
       active: input.active ?? true,
@@ -119,7 +145,7 @@ export class IamService {
     return of(updated);
   }
 
-  deleteUser(id: string): Observable<void> {
+  deleteUser(_id: string): Observable<void> {
     return of(void 0);
   }
 }

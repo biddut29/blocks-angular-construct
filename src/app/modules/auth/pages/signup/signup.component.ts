@@ -7,7 +7,12 @@ import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-  lucideUser, lucideMail, lucideLock, lucideEye, lucideEyeOff, lucideLoader,
+  lucideUser,
+  lucideMail,
+  lucideLock,
+  lucideEye,
+  lucideEyeOff,
+  lucideLoader,
 } from '@ng-icons/lucide';
 import { AuthService } from '../../services/auth.service';
 
@@ -15,7 +20,9 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-signup',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, NgIf, NgIconComponent],
-  viewProviders: [provideIcons({ lucideUser, lucideMail, lucideLock, lucideEye, lucideEyeOff, lucideLoader })],
+  viewProviders: [
+    provideIcons({ lucideUser, lucideMail, lucideLock, lucideEye, lucideEyeOff, lucideLoader }),
+  ],
   template: `
     <div class="bg-card rounded-xl border border-border p-8 shadow-sm">
       <div class="mb-6">
@@ -24,7 +31,10 @@ import { AuthService } from '../../services/auth.service';
       </div>
 
       <!-- Error alert -->
-      <div *ngIf="errorMessage()" class="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md text-destructive text-sm">
+      <div
+        *ngIf="errorMessage()"
+        class="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md text-destructive text-sm"
+      >
         {{ errorMessage() }}
       </div>
 
@@ -81,18 +91,26 @@ import { AuthService } from '../../services/auth.service';
                      focus:outline-none focus:ring-2 focus:ring-ring"
               [class.border-destructive]="fieldInvalid('password')"
             />
-            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-              (click)="showPassword.set(!showPassword())">
+            <button
+              type="button"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              (click)="showPassword.set(!showPassword())"
+            >
               <ng-icon [name]="showPassword() ? 'lucideEyeOff' : 'lucideEye'" class="w-4 h-4" />
             </button>
           </div>
-          <p *ngIf="fieldInvalid('password')" class="text-destructive text-xs">Minimum 8 characters.</p>
+          <p *ngIf="fieldInvalid('password')" class="text-destructive text-xs">
+            Minimum 8 characters.
+          </p>
         </div>
 
         <!-- Submit -->
-        <button type="submit" [disabled]="isLoading() || signupForm.invalid"
+        <button
+          type="submit"
+          [disabled]="isLoading() || signupForm.invalid"
           class="w-full h-10 bg-primary text-primary-foreground rounded-md text-sm font-medium
-                 hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 mt-2">
+                 hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 mt-2"
+        >
           <ng-icon *ngIf="isLoading()" name="lucideLoader" class="w-4 h-4 animate-spin" />
           {{ isLoading() ? 'Creating account...' : 'Create account' }}
         </button>
@@ -127,13 +145,21 @@ export class SignupComponent {
   }
 
   onSubmit(): void {
-    if (this.signupForm.invalid) { this.signupForm.markAllAsTouched(); return; }
+    if (this.signupForm.invalid) {
+      this.signupForm.markAllAsTouched();
+      return;
+    }
     this.isLoading.set(true);
     this.errorMessage.set('');
     const { firstName, lastName, email, password } = this.signupForm.value;
-    this._authService.signup({ firstName: firstName!, lastName: lastName!, email: email!, password: password! }).subscribe({
-      next: () => this._router.navigate(['/email-sent']),
-      error: err => { this.errorMessage.set(err?.error?.message ?? 'Signup failed.'); this.isLoading.set(false); },
-    });
+    this._authService
+      .signup({ firstName: firstName!, lastName: lastName!, email: email!, password: password! })
+      .subscribe({
+        next: () => this._router.navigate(['/email-sent']),
+        error: (err) => {
+          this.errorMessage.set(err?.error?.message ?? 'Signup failed.');
+          this.isLoading.set(false);
+        },
+      });
   }
 }

@@ -29,11 +29,13 @@ export class SsoService {
   private readonly _http = inject(HttpService);
 
   /** React `SSOservice.getSocialLoginEndpoint` */
-  getSocialLoginEndpoint(payload: SocialLoginEndpointPayload): Observable<SocialLoginEndpointResponse> {
+  getSocialLoginEndpoint(
+    payload: SocialLoginEndpointPayload
+  ): Observable<SocialLoginEndpointResponse> {
     return this._http.post<SocialLoginEndpointResponse>(
       AUTH_ENDPOINTS.socialLoginEndpoint,
       JSON.stringify(payload),
-      { withCredentials: true },
+      { withCredentials: true }
     );
   }
 }

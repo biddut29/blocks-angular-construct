@@ -29,31 +29,31 @@ export class HttpService {
   get<T>(url: string, options?: RequestOptions): Observable<T> {
     return this._http
       .get<T>(this._buildUrl(url), this._buildOptions(options))
-      .pipe(catchError(err => this._handleError(err)));
+      .pipe(catchError((err) => this._handleError(err)));
   }
 
   post<T>(url: string, body?: unknown, options?: RequestOptions): Observable<T> {
     return this._http
       .post<T>(this._buildUrl(url), body, this._buildOptions(options))
-      .pipe(catchError(err => this._handleError(err)));
+      .pipe(catchError((err) => this._handleError(err)));
   }
 
   put<T>(url: string, body?: unknown, options?: RequestOptions): Observable<T> {
     return this._http
       .put<T>(this._buildUrl(url), body, this._buildOptions(options))
-      .pipe(catchError(err => this._handleError(err)));
+      .pipe(catchError((err) => this._handleError(err)));
   }
 
   patch<T>(url: string, body?: unknown, options?: RequestOptions): Observable<T> {
     return this._http
       .patch<T>(this._buildUrl(url), body, this._buildOptions(options))
-      .pipe(catchError(err => this._handleError(err)));
+      .pipe(catchError((err) => this._handleError(err)));
   }
 
   delete<T>(url: string, options?: RequestOptions): Observable<T> {
     return this._http
       .delete<T>(this._buildUrl(url), this._buildOptions(options))
-      .pipe(catchError(err => this._handleError(err)));
+      .pipe(catchError((err) => this._handleError(err)));
   }
 
   // ── Private Helpers ────────────────────────────────────────────────────────
@@ -71,7 +71,7 @@ export class HttpService {
     withCredentials?: boolean;
   } {
     // Authorization and `x-blocks-key` are applied in `authInterceptor` (matches React `https.ts`).
-    let headers = new HttpHeaders({
+    const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       ...(options?.headers ?? {}),
     });

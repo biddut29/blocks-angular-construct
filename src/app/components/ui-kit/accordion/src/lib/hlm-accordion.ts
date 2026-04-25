@@ -16,17 +16,17 @@ import { classes } from '@spartan-ng/helm/utils';
  * ```
  */
 @Component({
-	selector: 'hlm-accordion, [hlmAccordion]',
-	standalone: true,
-	template: '<ng-content />',
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	hostDirectives: [{ directive: BrnAccordion, inputs: ['type', 'orientation'] }],
-	host: {
-		'data-slot': 'accordion',
-	},
+  selector: 'hlm-accordion, [hlmAccordion]',
+  standalone: true,
+  template: '<ng-content />',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  hostDirectives: [{ directive: BrnAccordion, inputs: ['type', 'orientation'] }],
+  host: {
+    'data-slot': 'accordion',
+  },
 })
 export class HlmAccordion {
-	constructor() {
-		classes(() => 'flex w-full flex-col');
-	}
+  constructor() {
+    classes(() => 'flex w-full flex-col');
+  }
 }

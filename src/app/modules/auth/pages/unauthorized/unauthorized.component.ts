@@ -12,7 +12,9 @@ import { lucideArrowRight, lucideShieldAlert } from '@ng-icons/lucide';
   imports: [RouterLink, NgIconComponent],
   viewProviders: [provideIcons({ lucideArrowRight, lucideShieldAlert })],
   template: `
-    <div class="min-h-[60vh] flex flex-col items-center justify-center text-center p-8 max-w-md mx-auto">
+    <div
+      class="min-h-[60vh] flex flex-col items-center justify-center text-center p-8 max-w-md mx-auto"
+    >
       <ng-icon
         name="lucideShieldAlert"
         class="w-16 h-16 text-destructive/80 mb-6"
@@ -20,7 +22,8 @@ import { lucideArrowRight, lucideShieldAlert } from '@ng-icons/lucide';
       />
       <h1 class="text-2xl font-bold text-foreground mb-2">Access denied</h1>
       <p class="text-muted-foreground text-sm mb-8">
-        You do not have permission to view this resource. Contact an administrator if you need access.
+        You do not have permission to view this resource. Contact an administrator if you need
+        access.
       </p>
       <a
         routerLink="/dashboard"

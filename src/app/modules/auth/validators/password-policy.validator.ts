@@ -34,11 +34,11 @@ export function allPasswordChecksMet(checks: PasswordChecks): boolean {
 export function passwordStrengthBarPercent(
   checks: PasswordChecks,
   password: string,
-  confirmPassword: string,
+  confirmPassword: string
 ): number {
   const keys = Object.keys(checks) as (keyof PasswordChecks)[];
   const total = keys.length + 1;
-  let met = keys.filter(k => checks[k]).length;
+  let met = keys.filter((k) => checks[k]).length;
   const passwordsMatch = password !== '' && password === confirmPassword;
   if (passwordsMatch) met += 1;
   return total > 0 ? (met / total) * 100 : 0;
@@ -61,16 +61,18 @@ export function passwordPolicyValidator(): ValidatorFn {
   };
 }
 
-export const PASSWORD_REQUIREMENT_ROWS: ReadonlyArray<{ key: keyof PasswordChecks; label: string }> =
-  [
-    { key: 'length', label: 'Between 8 and 30 characters' },
-    { key: 'case', label: 'At least 1 uppercase and 1 lowercase letter' },
-    { key: 'number', label: 'At least 1 digit' },
-    {
-      key: 'special',
-      label: `At least 1 special character (${PASSWORD_ALLOWED_SPECIAL.split('').join(' ')})`,
-    },
-  ];
+export const PASSWORD_REQUIREMENT_ROWS: ReadonlyArray<{
+  key: keyof PasswordChecks;
+  label: string;
+}> = [
+  { key: 'length', label: 'Between 8 and 30 characters' },
+  { key: 'case', label: 'At least 1 uppercase and 1 lowercase letter' },
+  { key: 'number', label: 'At least 1 digit' },
+  {
+    key: 'special',
+    label: `At least 1 special character (${PASSWORD_ALLOWED_SPECIAL.split('').join(' ')})`,
+  },
+];
 
 export function passwordsMatchMet(password: string, confirmPassword: string): boolean {
   return password !== '' && password === confirmPassword;

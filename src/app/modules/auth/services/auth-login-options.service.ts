@@ -19,7 +19,7 @@ export class AuthLoginOptionsService {
   load(): void {
     this.phase.set('loading');
     this._auth.getLoginOptions().subscribe({
-      next: opt => {
+      next: (opt) => {
         this.options.set(opt);
         this.phase.set('ready');
       },

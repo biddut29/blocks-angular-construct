@@ -5,10 +5,6 @@ export function idpErrorMessage(err: unknown, fallback: string): string {
     message?: string;
   };
   return (
-    e?.error?.error_description ??
-    e?.error?.message ??
-    e?.error?.title ??
-    e?.message ??
-    fallback
+    e?.error?.error_description ?? e?.error?.message ?? e?.error?.title ?? e?.message ?? fallback
   );
 }

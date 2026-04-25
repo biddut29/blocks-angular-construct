@@ -55,11 +55,16 @@ type Phase = 'loading' | 'invalid' | 'ready';
       <div *ngIf="phase() === 'invalid'" class="text-center py-4">
         <h1 class="text-xl font-bold text-foreground">Invalid link</h1>
         <p class="text-muted-foreground text-sm mt-2">
-          This page needs a valid <code class="text-xs bg-muted px-1 rounded">code</code> from your email.
+          This page needs a valid <code class="text-xs bg-muted px-1 rounded">code</code> from your
+          email.
         </p>
-        <a routerLink="/signup" class="inline-block mt-4 text-primary hover:underline text-sm">Sign up</a>
+        <a routerLink="/signup" class="inline-block mt-4 text-primary hover:underline text-sm"
+          >Sign up</a
+        >
         <span class="text-muted-foreground text-sm mx-2">·</span>
-        <a routerLink="/login" class="inline-block mt-4 text-primary hover:underline text-sm">Sign in</a>
+        <a routerLink="/login" class="inline-block mt-4 text-primary hover:underline text-sm"
+          >Sign in</a
+        >
       </div>
 
       <!-- Form -->
@@ -84,7 +89,9 @@ type Phase = 'loading' | 'invalid' | 'ready';
                 formControlName="firstName"
                 class="w-full h-10 px-3 rounded-md border border-input bg-background text-sm
                        focus:outline-none focus:ring-2 focus:ring-ring"
-                [class.border-destructive]="form.get('firstName')?.invalid && form.get('firstName')?.touched"
+                [class.border-destructive]="
+                  form.get('firstName')?.invalid && form.get('firstName')?.touched
+                "
               />
             </div>
             <div class="space-y-1.5">
@@ -94,7 +101,9 @@ type Phase = 'loading' | 'invalid' | 'ready';
                 formControlName="lastName"
                 class="w-full h-10 px-3 rounded-md border border-input bg-background text-sm
                        focus:outline-none focus:ring-2 focus:ring-ring"
-                [class.border-destructive]="form.get('lastName')?.invalid && form.get('lastName')?.touched"
+                [class.border-destructive]="
+                  form.get('lastName')?.invalid && form.get('lastName')?.touched
+                "
               />
             </div>
           </div>
@@ -143,7 +152,9 @@ type Phase = 'loading' | 'invalid' | 'ready';
             class="w-full rounded-lg border border-border bg-background px-5 py-4 shadow-sm
                    dark:border-border dark:bg-card"
           >
-            <h2 class="text-base font-bold text-foreground tracking-tight">Password Requirements</h2>
+            <h2 class="text-base font-bold text-foreground tracking-tight">
+              Password Requirements
+            </h2>
             <div class="mt-2 h-1 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-muted">
               <div
                 class="h-full rounded-full transition-[width] duration-300 ease-out"
@@ -220,7 +231,7 @@ export class AccountActivationComponent implements OnInit {
   readonly strengthPercent = signal(0);
   readonly passwordsMatchRow = signal(false);
   readonly strengthBarColorClass = computed(() =>
-    passwordStrengthBarColorClass(this.strengthPercent()),
+    passwordStrengthBarColorClass(this.strengthPercent())
   );
 
   readonly requirementRows = [...PASSWORD_REQUIREMENT_ROWS];
@@ -237,7 +248,7 @@ export class AccountActivationComponent implements OnInit {
       ],
       confirmPassword: ['', [Validators.required, Validators.maxLength(PASSWORD_MAX_LENGTH)]],
     },
-    { validators: passwordMatchValidator },
+    { validators: passwordMatchValidator }
   );
 
   constructor() {
@@ -265,7 +276,7 @@ export class AccountActivationComponent implements OnInit {
         projectKey: environment.xBlocksKey,
       })
       .subscribe({
-        next: res => {
+        next: (res) => {
           if (res.userId) {
             this._router.navigate(['/activate-failed'], { queryParams: { userId: res.userId } });
             return;
@@ -305,7 +316,7 @@ export class AccountActivationComponent implements OnInit {
           this._router.navigate(['/success']);
           this.isLoading.set(false);
         },
-        error: err => {
+        error: (err) => {
           this.errorMessage.set(idpErrorMessage(err, 'Activation failed.'));
           this.isLoading.set(false);
         },

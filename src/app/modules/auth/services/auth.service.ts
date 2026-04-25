@@ -33,6 +33,15 @@ interface SignInTokenResponse {
   error_description?: string;
 }
 
+interface SwitchOrganizationTokenResponse {
+  access_token: string;
+  refresh_token?: string;
+  expires_in?: number;
+  token_type?: string;
+  error?: string;
+  error_description?: string;
+}
+
 interface GetAccountWrapper {
   data: User & {
     memberships?: Array<{
@@ -52,6 +61,11 @@ export class AuthService {
   private _savedOrgId(): string | null {
     if (typeof window === 'undefined') return null;
     return window.localStorage.getItem('selected-org-id');
+  }
+
+  setSelectedOrgId(orgId: string): void {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem('selected-org-id', orgId);
   }
 
   private _passwordTokenBody(username: string, password: string): URLSearchParams {
@@ -75,21 +89,21 @@ export class AuthService {
         withCredentials: true,
       })
       .pipe(
-        switchMap(res => {
+        switchMap((res) => {
           if (res.enable_mfa) {
             return throwError(
               () =>
                 new Error(
                   res.error_description ??
-                    'Multi-factor authentication is required for this account.',
-                ),
+                    'Multi-factor authentication is required for this account.'
+                )
             );
           }
           const access = res.access_token;
           const refresh = res.refresh_token;
           if (!access || !refresh) {
             return throwError(
-              () => new Error(res.error_description ?? res.error ?? 'Invalid sign-in response.'),
+              () => new Error(res.error_description ?? res.error ?? 'Invalid sign-in response.')
             );
           }
           return of({
@@ -99,7 +113,7 @@ export class AuthService {
             tokenType: res.token_type,
           } satisfies AuthTokens);
         }),
-        tap(tokens => this._authStore.setTokens(tokens)),
+        tap((tokens) => this._authStore.setTokens(tokens))
       );
   }
 
@@ -113,20 +127,14 @@ export class AuthService {
   }
 
   /** React `forgotPassword` → `/idp/v1/Iam/Recover` (includes `captchaCode`, often `''`) */
-  forgotPassword(
-    email: string,
-    captchaCode = '',
-  ): Observable<ForgotPasswordResponse> {
+  forgotPassword(email: string, captchaCode = ''): Observable<ForgotPasswordResponse> {
     const payload = {
       email,
       captchaCode,
       mailPurpose: 'RecoverAccount',
       projectKey: environment.xBlocksKey,
     };
-    return this._http.post<ForgotPasswordResponse>(
-      AUTH_ENDPOINTS.recover,
-      JSON.stringify(payload),
-    );
+    return this._http.post<ForgotPasswordResponse>(AUTH_ENDPOINTS.recover, JSON.stringify(payload));
   }
 
   /** React `validateActivationCode` */
@@ -136,7 +144,7 @@ export class AuthService {
   }): Observable<ActivationCodeExpirationResponse> {
     return this._http.post<ActivationCodeExpirationResponse>(
       AUTH_ENDPOINTS.validateActivationCode,
-      JSON.stringify(payload),
+      JSON.stringify(payload)
     );
   }
 
@@ -153,7 +161,7 @@ export class AuthService {
       JSON.stringify({
         userId: body.userId,
         projectKey: body.projectKey ?? environment.xBlocksKey,
-      }),
+      })
     );
   }
 
@@ -178,9 +186,9 @@ export class AuthService {
 
   /** React `getAccount` — `/idp/v1/Iam/GetAccount` */
   getProfile(): Observable<User> {
-    return this._http.get<GetAccountWrapper>(AUTH_ENDPOINTS.getAccount).pipe(
-      map(w => this._mapAccountUser(w?.data)),
-    );
+    return this._http
+      .get<GetAccountWrapper>(AUTH_ENDPOINTS.getAccount)
+      .pipe(map((w) => this._mapAccountUser(w?.data)));
   }
 
   /**
@@ -190,22 +198,63 @@ export class AuthService {
   signOut(): Observable<{ isSuccess: boolean }> {
     const refreshToken = this._authStore.refreshToken();
     return this._http
-      .post<{ isSuccess: boolean }>(
-        AUTH_ENDPOINTS.logout,
-        JSON.stringify({ refreshToken }),
-      )
+      .post<{ isSuccess: boolean }>(AUTH_ENDPOINTS.logout, JSON.stringify({ refreshToken }))
       .pipe(
         tap(() => this._authStore.logout()),
         catchError(() => {
           this._authStore.logout();
           return of({ isSuccess: true });
-        }),
+        })
       );
   }
 
   /** React `logoutAll` */
   logoutAll(): Observable<unknown> {
     return this._http.post(AUTH_ENDPOINTS.logoutAll, '');
+  }
+
+  /**
+   * React `switchOrganization` — POST `/idp/v1/Authentication/Token`
+   * with `grant_type=switch_organization`, `refresh_token`, and `org_id`.
+   */
+  switchOrganization(orgId: string): Observable<AuthTokens> {
+    const refreshToken = this._authStore.refreshToken();
+    if (!refreshToken) {
+      return throwError(() => new Error('Missing refresh token.'));
+    }
+    if (!orgId) {
+      return throwError(() => new Error('Organization id is required.'));
+    }
+
+    const form = new URLSearchParams();
+    form.set('grant_type', 'switch_organization');
+    form.set('refresh_token', refreshToken);
+    form.set('org_id', orgId);
+
+    return this._http
+      .post<SwitchOrganizationTokenResponse>(AUTH_ENDPOINTS.token, form, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        withCredentials: true,
+      })
+      .pipe(
+        map((res) => {
+          if (!res?.access_token) {
+            throw new Error(
+              res?.error_description ?? res?.error ?? 'Invalid switch organization response.'
+            );
+          }
+          return {
+            accessToken: res.access_token,
+            refreshToken: res.refresh_token ?? refreshToken,
+            expiresIn: res.expires_in,
+            tokenType: res.token_type,
+          } satisfies AuthTokens;
+        }),
+        tap((tokens) => {
+          this.setSelectedOrgId(orgId);
+          this._authStore.setTokens(tokens);
+        })
+      );
   }
 
   /** Local-only logout (no IdP call) */
@@ -228,9 +277,7 @@ export class AuthService {
     return this._http.get<SignupSettings>(path);
   }
 
-  private _mapAccountUser(
-    data: GetAccountWrapper['data'] | null | undefined,
-  ): User {
+  private _mapAccountUser(data: GetAccountWrapper['data'] | null | undefined): User {
     if (!data) {
       throw new Error('Empty account response');
     }
@@ -242,8 +289,13 @@ export class AuthService {
         roles?: string[];
       }>;
     };
-    const memberships = raw.memberships?.map(m => {
-      const row = m as { organizationId?: string; orgId?: string; orgName?: string; roles?: string[] };
+    const memberships = raw.memberships?.map((m) => {
+      const row = m as {
+        organizationId?: string;
+        orgId?: string;
+        orgName?: string;
+        roles?: string[];
+      };
       return {
         orgId: row.organizationId ?? row.orgId ?? '',
         orgName: row.orgName ?? '',

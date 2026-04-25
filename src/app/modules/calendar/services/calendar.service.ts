@@ -3,7 +3,12 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { GraphQLService } from '../../../lib/graphql.service';
-import { CalendarEvent, CreateEventInput, EventMember, UpdateEventInput } from '../../../models/calendar.model';
+import {
+  CalendarEvent,
+  CreateEventInput,
+  EventMember,
+  UpdateEventInput,
+} from '../../../models/calendar.model';
 
 @Injectable({ providedIn: 'root' })
 export class CalendarService {
@@ -91,7 +96,7 @@ export class CalendarService {
   }
 
   // ── Delete Event ───────────────────────────────────────────────────────────
-  deleteEvent(id: string): Observable<void> {
+  deleteEvent(_id: string): Observable<void> {
     return of(void 0);
   }
 }

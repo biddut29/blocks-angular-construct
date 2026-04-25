@@ -5,7 +5,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { GraphQLService } from '../../../lib/graphql.service';
-import { Email, EmailFilter, ComposeEmailInput, EmailLabel, EmailCategory } from '../../../models/email.model';
+import { Email, EmailFilter, ComposeEmailInput, EmailLabel } from '../../../models/email.model';
 import { PaginatedResponse } from '../../../types/api.types';
 
 @Injectable({ providedIn: 'root' })
@@ -16,8 +16,8 @@ export class EmailService {
   getEmails(filter: EmailFilter): Observable<PaginatedResponse<Email>> {
     // Mirrors: getEmails GraphQL query in React
     return of({
-      items: this._mockEmails().filter(e =>
-        filter.category === 'inbox' ? e.category === 'inbox' : e.category === filter.category,
+      items: this._mockEmails().filter((e) =>
+        filter.category === 'inbox' ? e.category === 'inbox' : e.category === filter.category
       ),
       totalCount: 24,
       pageNo: filter.pageNo,
@@ -28,7 +28,7 @@ export class EmailService {
 
   /** Get a single email by ID */
   getEmail(emailId: string): Observable<Email | null> {
-    const found = this._mockEmails().find(e => e.emailId === emailId) ?? null;
+    const found = this._mockEmails().find((e) => e.emailId === emailId) ?? null;
     return of(found);
   }
 
@@ -67,22 +67,22 @@ export class EmailService {
   }
 
   /** Mark email as read/unread */
-  markAsRead(emailId: string, isRead: boolean): Observable<void> {
+  markAsRead(_emailId: string, _isRead: boolean): Observable<void> {
     return of(void 0);
   }
 
   /** Star / unstar an email */
-  toggleStar(emailId: string, isStarred: boolean): Observable<void> {
+  toggleStar(_emailId: string, _isStarred: boolean): Observable<void> {
     return of(void 0);
   }
 
   /** Move to trash */
-  moveToTrash(emailId: string): Observable<void> {
+  moveToTrash(_emailId: string): Observable<void> {
     return of(void 0);
   }
 
   /** Delete permanently */
-  deleteEmail(emailId: string): Observable<void> {
+  deleteEmail(_emailId: string): Observable<void> {
     return of(void 0);
   }
 
@@ -97,7 +97,7 @@ export class EmailService {
   }
 
   /** Apply label to email */
-  applyLabel(emailId: string, labelId: string): Observable<void> {
+  applyLabel(_emailId: string, _labelId: string): Observable<void> {
     return of(void 0);
   }
 

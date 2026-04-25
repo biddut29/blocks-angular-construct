@@ -2,7 +2,7 @@
 // Mirrors: src/layout/main-layout/ in React project
 // Wraps all authenticated pages with sidebar + header
 
-import { Component, signal, HostListener, inject } from '@angular/core';
+import { Component, signal, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { AppSidebarComponent } from '../../components/core/app-sidebar/app-sidebar.component';

@@ -2,13 +2,15 @@
 // Mirrors: React <ProtectedRoute roles={['admin']}> and useIsProtected (any opt)
 
 import { inject } from '@angular/core';
-import { CanActivateFn, Router, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import {
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+  ActivatedRouteSnapshot,
+} from '@angular/router';
 import { AuthStore } from './auth.store';
 
-function getData(
-  r: ActivatedRouteSnapshot | null,
-  key: 'roles' | 'permissions',
-): string[] {
+function getData(r: ActivatedRouteSnapshot | null, key: 'roles' | 'permissions'): string[] {
   let current: ActivatedRouteSnapshot | null = r;
   while (current) {
     const v = (current.data[key] as string[] | undefined) ?? [];
@@ -20,7 +22,7 @@ function getData(
 
 export const roleGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
-  _state: RouterStateSnapshot,
+  _state: RouterStateSnapshot
 ) => {
   const auth = inject(AuthStore);
   const router = inject(Router);

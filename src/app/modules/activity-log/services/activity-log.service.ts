@@ -11,7 +11,9 @@ export class ActivityLogService {
   private readonly _graphql = inject(GraphQLService);
 
   // ── Get Logs ───────────────────────────────────────────────────────────────
-  getLogs(filter: Partial<ActivityLogFilter> = { pageNo: 1, pageSize: 20 }): Observable<PaginatedResponse<ActivityLog>> {
+  getLogs(
+    filter: Partial<ActivityLogFilter> = { pageNo: 1, pageSize: 20 }
+  ): Observable<PaginatedResponse<ActivityLog>> {
     // Mock data — replace with actual GraphQL query
     const items: ActivityLog[] = [
       {

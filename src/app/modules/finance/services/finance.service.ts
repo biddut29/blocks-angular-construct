@@ -3,7 +3,12 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { GraphQLService } from '../../../lib/graphql.service';
-import { FinanceSummary, RevenueData, FinanceTransaction, FinanceFilter } from '../../../models/finance.model';
+import {
+  FinanceSummary,
+  RevenueData,
+  FinanceTransaction,
+  FinanceFilter,
+} from '../../../models/finance.model';
 import { PaginatedResponse } from '../../../types/index';
 
 @Injectable({ providedIn: 'root' })
@@ -36,7 +41,9 @@ export class FinanceService {
   }
 
   // ── Transactions ───────────────────────────────────────────────────────────
-  getTransactions(filter: Partial<FinanceFilter> = { pageNo: 1, pageSize: 10 }): Observable<PaginatedResponse<FinanceTransaction>> {
+  getTransactions(
+    filter: Partial<FinanceFilter> = { pageNo: 1, pageSize: 10 }
+  ): Observable<PaginatedResponse<FinanceTransaction>> {
     const items: FinanceTransaction[] = [
       {
         transactionId: 'txn-001',

@@ -21,7 +21,8 @@ import { idpErrorMessage } from '../../utils/idp-error.util';
       </div>
       <h1 class="text-2xl font-bold text-foreground text-center">Verification failed</h1>
       <p class="text-muted-foreground text-sm mt-2 text-center">
-        This activation link is no longer valid. You can request a new link if your account is still pending.
+        This activation link is no longer valid. You can request a new link if your account is still
+        pending.
       </p>
 
       <div *ngIf="userId()" class="mt-6 space-y-3">
@@ -35,8 +36,13 @@ import { idpErrorMessage } from '../../utils/idp-error.util';
           <ng-icon *ngIf="resendPending()" name="lucideLoader" class="w-4 h-4 animate-spin" />
           {{ resendPending() ? 'Sending...' : 'Resend activation link' }}
         </button>
-        <p *ngIf="resendError()" class="text-destructive text-sm text-center">{{ resendError() }}</p>
-        <div *ngIf="resendSuccess()" class="flex items-center justify-center gap-2 text-sm text-green-600">
+        <p *ngIf="resendError()" class="text-destructive text-sm text-center">
+          {{ resendError() }}
+        </p>
+        <div
+          *ngIf="resendSuccess()"
+          class="flex items-center justify-center gap-2 text-sm text-green-600"
+        >
           <ng-icon name="lucideCircleCheck" class="w-4 h-4 shrink-0" />
           <span>A new link has been sent to your email.</span>
         </div>
@@ -76,7 +82,7 @@ export class ActivateFailedComponent {
         this.resendSuccess.set(true);
         this.resendPending.set(false);
       },
-      error: err => {
+      error: (err) => {
         this.resendError.set(idpErrorMessage(err, 'Could not resend the link.'));
         this.resendPending.set(false);
       },

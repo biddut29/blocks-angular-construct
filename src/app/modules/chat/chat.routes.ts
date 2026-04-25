@@ -7,7 +7,6 @@ export const CHAT_ROUTES: Routes = [
     path: '',
     canActivate: [roleGuard],
     data: { roles: ['admin'] },
-    loadComponent: () =>
-      import('./pages/chat/chat.component').then(m => m.ChatComponent),
+    loadComponent: () => import('./pages/chat/chat.component').then((m) => m.ChatComponent),
   },
 ];

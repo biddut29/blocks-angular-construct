@@ -94,7 +94,9 @@ const DEMO_BANNER_HOSTS: readonly string[] = [
               class="h-11 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50"
               [class.border-destructive]="emailInvalid"
             />
-            <p *ngIf="emailInvalid" class="text-xs text-destructive">Please enter a valid email address.</p>
+            <p *ngIf="emailInvalid" class="text-xs text-destructive">
+              Please enter a valid email address.
+            </p>
           </div>
 
           <div class="space-y-1.5">
@@ -146,7 +148,9 @@ const DEMO_BANNER_HOSTS: readonly string[] = [
       @if (passwordGrantAllowed() && socialGrantAllowed()) {
         <div class="relative flex items-center gap-3 py-1">
           <div class="h-px flex-1 bg-border"></div>
-          <span class="shrink-0 text-xs font-medium uppercase tracking-wide text-muted-foreground">Or</span>
+          <span class="shrink-0 text-xs font-medium uppercase tracking-wide text-muted-foreground"
+            >Or</span
+          >
           <div class="h-px flex-1 bg-border"></div>
         </div>
       }
@@ -190,12 +194,13 @@ export class LoginComponent implements OnInit {
   readonly ssoBusy = signal(false);
   readonly showPassword = signal(false);
   readonly errorMessage = signal('');
-  readonly signupSettings = signal<{ isEmailPasswordSignUpEnabled?: boolean; isSSoSignUpEnabled?: boolean } | null>(
-    null,
-  );
+  readonly signupSettings = signal<{
+    isEmailPasswordSignUpEnabled?: boolean;
+    isSSoSignUpEnabled?: boolean;
+  } | null>(null);
 
   readonly showDemoBanner = signal(
-    typeof window !== 'undefined' && DEMO_BANNER_HOSTS.includes(window.location.hostname),
+    typeof window !== 'undefined' && DEMO_BANNER_HOSTS.includes(window.location.hostname)
   );
 
   readonly loginForm = this._fb.group({
@@ -235,7 +240,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this._authService.getSignupSettings().subscribe({
-      next: s => this.signupSettings.set(s),
+      next: (s) => this.signupSettings.set(s),
       error: () => this.signupSettings.set(null),
     });
   }
@@ -263,7 +268,7 @@ export class LoginComponent implements OnInit {
         sendAsResponse: true,
       })
       .subscribe({
-        next: res => {
+        next: (res) => {
           this.ssoBusy.set(false);
           if (res.error) {
             this.errorMessage.set(String(res.error));
@@ -271,7 +276,7 @@ export class LoginComponent implements OnInit {
           }
           if (res.requiresMfa && res.mfaToken != null) {
             this.errorMessage.set(
-              'Additional sign-in verification is required. Add an Angular route for MFA (React uses /verify-mfa) to complete this flow.',
+              'Additional sign-in verification is required. Add an Angular route for MFA (React uses /verify-mfa) to complete this flow.'
             );
             return;
           }
@@ -301,7 +306,10 @@ export class LoginComponent implements OnInit {
       next: () => {
         this._router.navigate(['/dashboard']);
       },
-      error: (err: { error?: { error_description?: string; message?: string }; message?: string }) => {
+      error: (err: {
+        error?: { error_description?: string; message?: string };
+        message?: string;
+      }) => {
         const msg =
           err?.error?.error_description ??
           err?.error?.message ??

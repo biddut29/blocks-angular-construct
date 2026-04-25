@@ -2,16 +2,43 @@
 import { ActivityGroup } from '../types/activity-timeline.model';
 
 const shared = {
-  finalizeBudget: { category: 'Task manager', description: 'User Adrian Müller completed the task "Finalize Q1 Budget"' },
-  quarterlyReview: { category: 'Calendar', description: 'Created an event: "Quarterly Review Meeting" (2025-03-10)' },
-  steelBeamsAdded: { category: 'Inventory', description: 'Added a new inventory item: "Steel Beams - 50 units"' },
-  emailFromAdrian: { category: 'Mail', description: 'New email from Adrian Müller (adrian-muller@gmail.com)' },
-  dashboardRefreshed: { category: 'Dashboard', description: 'System auto-refreshed dashboard analytics.' },
-  overdueTask: { category: 'Task manager', description: 'System marked overdue task "Submit Compliance Docs"' },
-  standupRescheduled: { category: 'Calendar', description: 'User Ethan Gold rescheduled "Team Standup" from 9:00 AM to 10:00 AM' },
+  finalizeBudget: {
+    category: 'Task manager',
+    description: 'User Adrian Müller completed the task "Finalize Q1 Budget"',
+  },
+  quarterlyReview: {
+    category: 'Calendar',
+    description: 'Created an event: "Quarterly Review Meeting" (2025-03-10)',
+  },
+  steelBeamsAdded: {
+    category: 'Inventory',
+    description: 'Added a new inventory item: "Steel Beams - 50 units"',
+  },
+  emailFromAdrian: {
+    category: 'Mail',
+    description: 'New email from Adrian Müller (adrian-muller@gmail.com)',
+  },
+  dashboardRefreshed: {
+    category: 'Dashboard',
+    description: 'System auto-refreshed dashboard analytics.',
+  },
+  overdueTask: {
+    category: 'Task manager',
+    description: 'System marked overdue task "Submit Compliance Docs"',
+  },
+  standupRescheduled: {
+    category: 'Calendar',
+    description: 'User Ethan Gold rescheduled "Team Standup" from 9:00 AM to 10:00 AM',
+  },
   mfaEnabled: { category: 'IAM', description: 'Enabled MFA for 3 users' },
-  deleteAdhesives: { category: 'Inventory', description: 'Deleted item "Adhesives" from inventory' },
-  deleteVendorTask: { category: 'Task manager', description: 'Deleted task "Follow-up on Vendor Contract"' },
+  deleteAdhesives: {
+    category: 'Inventory',
+    description: 'Deleted item "Adhesives" from inventory',
+  },
+  deleteVendorTask: {
+    category: 'Task manager',
+    description: 'Deleted task "Follow-up on Vendor Contract"',
+  },
 } as const;
 
 export const TIMELINE_ACTIVITIES_DATA: ActivityGroup[] = [

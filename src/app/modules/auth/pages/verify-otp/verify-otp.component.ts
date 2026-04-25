@@ -2,8 +2,16 @@
 // Mirrors: src/modules/auth/pages/verify-otp/ in React project
 // 6-digit OTP input with auto-focus and resend support
 
-import { Component, inject, signal, OnInit, ElementRef, ViewChildren, QueryList } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  inject,
+  signal,
+  OnInit,
+  ElementRef,
+  ViewChildren,
+  QueryList,
+} from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgIf, NgFor } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -17,7 +25,9 @@ import { AuthService } from '../../services/auth.service';
   viewProviders: [provideIcons({ lucideLoader, lucideShieldCheck })],
   template: `
     <div class="bg-card rounded-xl border border-border p-8 shadow-sm text-center">
-      <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div
+        class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"
+      >
         <ng-icon name="lucideShieldCheck" class="w-7 h-7 text-primary" />
       </div>
 
@@ -31,7 +41,7 @@ import { AuthService } from '../../services/auth.service';
       <!-- OTP boxes -->
       <div class="flex items-center justify-center gap-2 mb-6">
         <input
-          *ngFor="let _ of [0,1,2,3,4,5]; let i = index"
+          *ngFor="let _ of [0, 1, 2, 3, 4, 5]; let i = index"
           #otpInput
           type="text"
           inputmode="numeric"
@@ -92,7 +102,7 @@ export class VerifyOtpComponent implements OnInit {
     input.value = value;
 
     const inputs = this.otpInputs.toArray();
-    const otpArr = inputs.map(i => i.nativeElement.value);
+    const otpArr = inputs.map((i) => i.nativeElement.value);
     this.otp.set(otpArr.join(''));
 
     if (value && index < 5) {
@@ -126,15 +136,21 @@ export class VerifyOtpComponent implements OnInit {
     this.isLoading.set(true);
     this._authService.verifyOtp({ email: this.email, otp: this.otp() }).subscribe({
       next: () => this._router.navigate(['/activation-success']),
-      error: err => { this.errorMessage.set(err?.error?.message ?? 'Invalid OTP.'); this.isLoading.set(false); },
+      error: (err) => {
+        this.errorMessage.set(err?.error?.message ?? 'Invalid OTP.');
+        this.isLoading.set(false);
+      },
     });
   }
 
   onResend(): void {
     this.resendCooldown.set(60);
     const interval = setInterval(() => {
-      this.resendCooldown.update(v => {
-        if (v <= 1) { clearInterval(interval); return 0; }
+      this.resendCooldown.update((v) => {
+        if (v <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
         return v - 1;
       });
     }, 1000);

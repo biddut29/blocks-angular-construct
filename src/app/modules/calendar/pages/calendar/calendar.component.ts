@@ -54,7 +54,9 @@ import { CalendarEvent, CreateEventInput } from '../../../../models/calendar.mod
       <div class="flex items-center justify-between">
         <div>
           <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Calendar</h1>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage your events and schedule.</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Manage your events and schedule.
+          </p>
         </div>
 
         <!-- Add Event Button -->
@@ -71,30 +73,58 @@ import { CalendarEvent, CreateEventInput } from '../../../../models/calendar.mod
             </hlm-dialog-header>
 
             <form [formGroup]="eventForm" (ngSubmit)="onSubmitEvent(ctx)" class="space-y-4 py-4">
-
               <div class="space-y-1">
                 <label hlmLabel for="title">Event Title</label>
-                <input hlmInput id="title" formControlName="title" placeholder="Team meeting..." class="w-full" />
+                <input
+                  hlmInput
+                  id="title"
+                  formControlName="title"
+                  placeholder="Team meeting..."
+                  class="w-full"
+                />
               </div>
 
               <div class="space-y-1">
                 <label hlmLabel for="start">Start Date & Time</label>
-                <input hlmInput id="start" type="datetime-local" formControlName="start" class="w-full" />
+                <input
+                  hlmInput
+                  id="start"
+                  type="datetime-local"
+                  formControlName="start"
+                  class="w-full"
+                />
               </div>
 
               <div class="space-y-1">
                 <label hlmLabel for="end">End Date & Time</label>
-                <input hlmInput id="end" type="datetime-local" formControlName="end" class="w-full" />
+                <input
+                  hlmInput
+                  id="end"
+                  type="datetime-local"
+                  formControlName="end"
+                  class="w-full"
+                />
               </div>
 
               <div class="space-y-1">
                 <label hlmLabel for="description">Description</label>
-                <input hlmInput id="description" formControlName="description" placeholder="Optional description..." class="w-full" />
+                <input
+                  hlmInput
+                  id="description"
+                  formControlName="description"
+                  placeholder="Optional description..."
+                  class="w-full"
+                />
               </div>
 
               <div class="space-y-1">
                 <label hlmLabel for="color">Color</label>
-                <input type="color" id="color" formControlName="color" class="h-9 w-full rounded-md border border-input cursor-pointer" />
+                <input
+                  type="color"
+                  id="color"
+                  formControlName="color"
+                  class="h-9 w-full rounded-md border border-input cursor-pointer"
+                />
               </div>
 
               <hlm-dialog-footer class="gap-2">
@@ -107,34 +137,51 @@ import { CalendarEvent, CreateEventInput } from '../../../../models/calendar.mod
       </div>
 
       <!-- ── Calendar ────────────────────────────────────────────── -->
-      <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm p-4">
+      <div
+        class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm p-4"
+      >
         <full-calendar [options]="calendarOptions()"></full-calendar>
       </div>
 
       <!-- ── Event Detail Dialog (click) ────────────────────────── -->
       @if (selectedEvent()) {
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" (click)="selectedEvent.set(null)">
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 max-w-sm w-full mx-4" (click)="$event.stopPropagation()">
+        <div
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          (click)="selectedEvent.set(null)"
+        >
+          <div
+            class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 max-w-sm w-full mx-4"
+            (click)="$event.stopPropagation()"
+          >
             <div class="flex items-start justify-between mb-4">
               <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full" [style.background-color]="selectedEvent()!.color ?? '#4f46e5'"></div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ selectedEvent()!.title }}</h3>
+                <div
+                  class="w-3 h-3 rounded-full"
+                  [style.background-color]="selectedEvent()!.color ?? '#4f46e5'"
+                ></div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                  {{ selectedEvent()!.title }}
+                </h3>
               </div>
-              <button (click)="selectedEvent.set(null)" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+              <button
+                (click)="selectedEvent.set(null)"
+                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              >
                 <ng-icon name="lucideX" size="18"></ng-icon>
               </button>
             </div>
             @if (selectedEvent()!.description) {
-              <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">{{ selectedEvent()!.description }}</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                {{ selectedEvent()!.description }}
+              </p>
             }
             <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
               <ng-icon name="lucideCalendar" size="14"></ng-icon>
-              <span>{{ selectedEvent()!.start | date:'medium' }}</span>
+              <span>{{ selectedEvent()!.start | date: 'medium' }}</span>
             </div>
           </div>
         </div>
       }
-
     </div>
   `,
 })
@@ -175,8 +222,8 @@ export class CalendarComponent implements OnInit {
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
   ngOnInit(): void {
-    this.calendarService.getEvents().subscribe(events => {
-      const calEvents: EventInput[] = events.map(e => ({
+    this.calendarService.getEvents().subscribe((events) => {
+      const calEvents: EventInput[] = events.map((e) => ({
         id: e.eventId,
         title: e.title,
         start: e.start,
@@ -186,7 +233,7 @@ export class CalendarComponent implements OnInit {
         extendedProps: { description: e.description, original: e },
       }));
       this.events.set(calEvents);
-      this.calendarOptions.update(opts => ({ ...opts, events: calEvents }));
+      this.calendarOptions.update((opts) => ({ ...opts, events: calEvents }));
     });
   }
 
@@ -201,7 +248,7 @@ export class CalendarComponent implements OnInit {
       description: val.description ?? undefined,
       color: val.color ?? '#4f46e5',
     };
-    this.calendarService.createEvent(input).subscribe(newEvent => {
+    this.calendarService.createEvent(input).subscribe((newEvent) => {
       const calEvent: EventInput = {
         id: newEvent.eventId,
         title: newEvent.title,
@@ -210,8 +257,8 @@ export class CalendarComponent implements OnInit {
         color: newEvent.color ?? '#4f46e5',
         extendedProps: { description: newEvent.description, original: newEvent },
       };
-      this.events.update(list => [...list, calEvent]);
-      this.calendarOptions.update(opts => ({ ...opts, events: this.events() }));
+      this.events.update((list) => [...list, calEvent]);
+      this.calendarOptions.update((opts) => ({ ...opts, events: this.events() }));
       this.eventForm.reset({ color: '#4f46e5' });
       ctx.close();
     });

@@ -33,15 +33,15 @@ export class FileManagerService {
 
     const q = (filter.search ?? '').trim().toLowerCase();
     if (q) {
-      list = list.filter(f => f.name.toLowerCase().includes(q));
+      list = list.filter((f) => f.name.toLowerCase().includes(q));
     }
 
     if (filter.itemKind) {
-      list = list.filter(f => f.itemKind === filter.itemKind);
+      list = list.filter((f) => f.itemKind === filter.itemKind);
     }
 
     if (filter.dateFrom || filter.dateTo) {
-      list = list.filter(f => {
+      list = list.filter((f) => {
         const t = new Date(f.lastModifiedAt ?? f.createdAt).getTime();
         if (filter.dateFrom) {
           const from = new Date(filter.dateFrom + 'T00:00:00').getTime();
@@ -124,7 +124,7 @@ export class FileManagerService {
   // ── Delete File ────────────────────────────────────────────────────────────
   deleteFile(id: string): Observable<void> {
     for (const [k, arr] of this._localByParent.entries()) {
-      const next = arr.filter(f => f.fileId !== id);
+      const next = arr.filter((f) => f.fileId !== id);
       if (next.length !== arr.length) {
         this._localByParent.set(k, next);
         break;
@@ -134,7 +134,7 @@ export class FileManagerService {
   }
 
   // ── Restore File ───────────────────────────────────────────────────────────
-  restoreFile(id: string): Observable<void> {
+  restoreFile(_id: string): Observable<void> {
     return of(void 0);
   }
 

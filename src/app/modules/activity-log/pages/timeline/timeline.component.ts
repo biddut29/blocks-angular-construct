@@ -10,29 +10,26 @@ import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmCard } from '@spartan-ng/helm/card';
 import { HlmBadge } from '@spartan-ng/helm/badge';
 import { getFormattedDateLabel } from '../../utils/activity-date-label.util';
-import { TIMELINE_ACTIVITIES_DATA, TIMELINE_MODULE_FILTER_IDS } from '../../data/timeline-activities.data';
-import { ActivityGroup, ActivityItem } from '../../types/activity-timeline.model';
+import {
+  TIMELINE_ACTIVITIES_DATA,
+  TIMELINE_MODULE_FILTER_IDS,
+} from '../../data/timeline-activities.data';
+import { ActivityGroup } from '../../types/activity-timeline.model';
 
 const transformCategory = (category: string) => category.toLowerCase().replace(/\s+/g, '_');
 
 @Component({
   selector: 'app-timeline',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    NgIconComponent,
-    HlmInput,
-    HlmButton,
-    HlmCard,
-    HlmBadge,
-  ],
+  imports: [CommonModule, FormsModule, NgIconComponent, HlmInput, HlmButton, HlmCard, HlmBadge],
   viewProviders: [provideIcons({ lucideSearch, lucideX })],
   template: `
     <div class="p-6 flex w-full flex-col gap-4">
       <div>
         <h1 class="text-2xl font-bold text-foreground">Timeline</h1>
-        <p class="text-sm text-muted-foreground mt-1">Filtered system activity in vertical timeline (admin view).</p>
+        <p class="text-sm text-muted-foreground mt-1">
+          Filtered system activity in vertical timeline (admin view).
+        </p>
       </div>
 
       <div class="flex flex-col gap-3">
@@ -133,7 +130,9 @@ const transformCategory = (category: string) => category.toLowerCase().replace(/
                               <span
                                 class="hidden lg:inline mx-2 h-1.5 w-1.5 rounded-full bg-muted-foreground/40"
                               ></span>
-                              <span class="text-foreground font-semibold">{{ activity.category }}</span>
+                              <span class="text-foreground font-semibold">{{
+                                activity.category
+                              }}</span>
                             </div>
                             <div class="text-sm text-foreground/90 leading-snug">
                               {{ activity.description }}
@@ -156,7 +155,9 @@ const transformCategory = (category: string) => category.toLowerCase().replace(/
                               <span
                                 class="hidden lg:inline mx-2 h-1.5 w-1.5 rounded-full bg-muted-foreground/40"
                               ></span>
-                              <span class="text-foreground font-semibold">{{ activity.category }}</span>
+                              <span class="text-foreground font-semibold">{{
+                                activity.category
+                              }}</span>
                             </div>
                             <div class="text-sm text-foreground/90 leading-snug">
                               {{ activity.description }}
@@ -244,7 +245,7 @@ export class TimelineComponent implements OnDestroy {
   }
 
   toggleModule(id: string): void {
-    this.selectedModules.update(s => {
+    this.selectedModules.update((s) => {
       const next = new Set(s);
       if (next.has(id)) {
         next.delete(id);
@@ -273,10 +274,10 @@ export class TimelineComponent implements OnDestroy {
       toMs = new Date(toStr + 'T23:59:59.999').getTime();
     }
 
-    let out = this._source.map(g => ({ ...g, items: [...g.items] }));
+    let out = this._source.map((g) => ({ ...g, items: [...g.items] }));
 
     if (hasRange) {
-      out = out.filter(g => {
+      out = out.filter((g) => {
         const t = new Date(g.date).getTime();
         return t >= fromMs && t <= toMs;
       });
@@ -284,17 +285,20 @@ export class TimelineComponent implements OnDestroy {
 
     if (q) {
       out = out
-        .map(g => ({ ...g, items: g.items.filter(i => i.description.toLowerCase().includes(q)) }))
-        .filter(g => g.items.length > 0);
+        .map((g) => ({
+          ...g,
+          items: g.items.filter((i) => i.description.toLowerCase().includes(q)),
+        }))
+        .filter((g) => g.items.length > 0);
     }
 
     if (mods.size > 0) {
       out = out
-        .map(g => ({
+        .map((g) => ({
           ...g,
-          items: g.items.filter(i => mods.has(transformCategory(i.category))),
+          items: g.items.filter((i) => mods.has(transformCategory(i.category))),
         }))
-        .filter(g => g.items.length > 0);
+        .filter((g) => g.items.length > 0);
     }
 
     this._filtered.set(this.assignTrackIds(out));

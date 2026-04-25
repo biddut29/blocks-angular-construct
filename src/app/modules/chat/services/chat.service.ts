@@ -56,7 +56,13 @@ export class ChatService {
         conversationId: 'conv-003',
         participants: [
           { userId: 'u-001', name: 'Alice Johnson', email: 'alice@example.com', isOnline: true },
-          { userId: 'u-005', name: 'Eve Davis', email: 'eve@example.com', isOnline: false, lastSeen: '2024-06-16T18:00:00Z' },
+          {
+            userId: 'u-005',
+            name: 'Eve Davis',
+            email: 'eve@example.com',
+            isOnline: false,
+            lastSeen: '2024-06-16T18:00:00Z',
+          },
         ],
         lastMessage: {
           messageId: 'msg-030',

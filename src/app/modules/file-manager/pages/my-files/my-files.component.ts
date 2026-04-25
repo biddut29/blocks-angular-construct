@@ -97,7 +97,7 @@ import { FileItem, FileItemKind, FileViewMode } from '../../../../models/file-ma
               size="sm"
               type="button"
               class="h-9 border-dashed gap-1.5 text-sm"
-              (click)="$event.stopPropagation(); typePanelOpen.update(v => !v)"
+              (click)="$event.stopPropagation(); typePanelOpen.update((v) => !v)"
             >
               <ng-icon name="lucidePlusCircle" class="h-3.5 w-3.5 shrink-0 opacity-70" />
               {{ typeFilterLabel() }}
@@ -127,7 +127,7 @@ import { FileItem, FileItemKind, FileViewMode } from '../../../../models/file-ma
               size="sm"
               type="button"
               class="h-9 border-dashed gap-1.5 text-sm"
-              (click)="$event.stopPropagation(); datePanelOpen.update(v => !v)"
+              (click)="$event.stopPropagation(); datePanelOpen.update((v) => !v)"
             >
               <ng-icon name="lucidePlusCircle" class="h-3.5 w-3.5 shrink-0 opacity-70" />
               Last Modified
@@ -151,7 +151,14 @@ import { FileItem, FileItemKind, FileViewMode } from '../../../../models/file-ma
                   [ngModel]="dateTo()"
                   (ngModelChange)="setDateTo($event)"
                 />
-                <button hlmBtn variant="ghost" size="sm" type="button" class="text-xs" (click)="clearDates()">
+                <button
+                  hlmBtn
+                  variant="ghost"
+                  size="sm"
+                  type="button"
+                  class="text-xs"
+                  (click)="clearDates()"
+                >
                   Clear filter
                 </button>
               </div>
@@ -190,7 +197,7 @@ import { FileItem, FileItemKind, FileViewMode } from '../../../../models/file-ma
               hlmBtn
               type="button"
               class="h-9 gap-1.5 bg-teal-600 text-white hover:bg-teal-700 text-sm font-medium"
-              (click)="$event.stopPropagation(); addMenuOpen.update(v => !v)"
+              (click)="$event.stopPropagation(); addMenuOpen.update((v) => !v)"
             >
               <ng-icon name="lucidePlusCircle" class="h-4 w-4" />
               Add new
@@ -226,7 +233,9 @@ import { FileItem, FileItemKind, FileViewMode } from '../../../../models/file-ma
         <button type="button" class="hover:text-foreground" (click)="goRoot()">My files</button>
         @for (c of breadcrumbs(); track c.id) {
           <ng-icon name="lucideChevronRight" class="h-3 w-3" />
-          <button type="button" class="hover:text-foreground" (click)="goFolder(c.id)">{{ c.name }}</button>
+          <button type="button" class="hover:text-foreground" (click)="goFolder(c.id)">
+            {{ c.name }}
+          </button>
         }
       </nav>
 
@@ -240,27 +249,47 @@ import { FileItem, FileItemKind, FileViewMode } from '../../../../models/file-ma
             <table class="w-full text-sm min-w-[640px]">
               <thead class="bg-muted/40 border-b border-border">
                 <tr>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                    <button type="button" class="inline-flex items-center gap-1 hover:text-foreground" (click)="toggleSort()">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide"
+                  >
+                    <button
+                      type="button"
+                      class="inline-flex items-center gap-1 hover:text-foreground"
+                      (click)="toggleSort()"
+                    >
                       Name
                       <ng-icon name="lucideArrowDownWideNarrow" class="h-3 w-3 opacity-60" />
                     </button>
                   </th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                    <button type="button" class="inline-flex items-center gap-1 hover:text-foreground" (click)="toggleSort()">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide"
+                  >
+                    <button
+                      type="button"
+                      class="inline-flex items-center gap-1 hover:text-foreground"
+                      (click)="toggleSort()"
+                    >
                       Last Modified
                       <ng-icon name="lucideArrowDownWideNarrow" class="h-3 w-3 opacity-60" />
                     </button>
                   </th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide"
+                  >
                     Type
                   </th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide"
+                  >
                     Size
                   </th>
                   <th class="px-4 py-3 w-10 text-center">
                     <span class="sr-only">Info</span>
-                    <ng-icon name="lucideInfo" class="h-4 w-4 text-muted-foreground inline-block" title="Details" />
+                    <ng-icon
+                      name="lucideInfo"
+                      class="h-4 w-4 text-muted-foreground inline-block"
+                      title="Details"
+                    />
                   </th>
                   <th class="w-12 px-2"></th>
                 </tr>
@@ -273,7 +302,11 @@ import { FileItem, FileItemKind, FileViewMode } from '../../../../models/file-ma
                   >
                     <td class="px-4 py-3">
                       <div class="flex items-center gap-3 min-w-0">
-                        <ng-icon [name]="iconFor(item)" class="h-5 w-5 shrink-0" [class]="iconColorFor(item)" />
+                        <ng-icon
+                          [name]="iconFor(item)"
+                          class="h-5 w-5 shrink-0"
+                          [class]="iconColorFor(item)"
+                        />
                         <span class="font-medium truncate">{{ item.name }}</span>
                         @if (item.isShared) {
                           <ng-icon
@@ -285,7 +318,7 @@ import { FileItem, FileItemKind, FileViewMode } from '../../../../models/file-ma
                       </div>
                     </td>
                     <td class="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
-                      {{ (item.lastModifiedAt ?? item.createdAt) | date: 'short' }}
+                      {{ item.lastModifiedAt ?? item.createdAt | date: 'short' }}
                     </td>
                     <td class="px-4 py-3 text-muted-foreground">{{ item.itemKind }}</td>
                     <td class="px-4 py-3 text-muted-foreground">{{ displaySize(item) }}</td>
@@ -331,7 +364,9 @@ import { FileItem, FileItemKind, FileViewMode } from '../../../../models/file-ma
                   </tr>
                 } @empty {
                   <tr>
-                    <td colspan="6" class="px-4 py-16 text-center text-muted-foreground">No files found.</td>
+                    <td colspan="6" class="px-4 py-16 text-center text-muted-foreground">
+                      No files found.
+                    </td>
                   </tr>
                 }
               </tbody>
@@ -412,8 +447,15 @@ import { FileItem, FileItemKind, FileViewMode } from '../../../../models/file-ma
               (dblclick)="openItem(item)"
               class="group relative rounded-xl border border-border bg-card p-4 flex flex-col items-center gap-2 text-left hover:border-teal-500/50 hover:shadow-md transition-all"
             >
-              <div class="w-14 h-14 flex items-center justify-center rounded-lg" [class]="iconBgFor(item)">
-                <ng-icon [name]="iconFor(item)" class="h-7 w-7" [class]="iconColorFor(item)"></ng-icon>
+              <div
+                class="w-14 h-14 flex items-center justify-center rounded-lg"
+                [class]="iconBgFor(item)"
+              >
+                <ng-icon
+                  [name]="iconFor(item)"
+                  class="h-7 w-7"
+                  [class]="iconColorFor(item)"
+                ></ng-icon>
               </div>
               <span class="text-xs font-medium text-center truncate w-full">{{ item.name }}</span>
               @if (item.isShared) {
@@ -436,15 +478,30 @@ import { FileItem, FileItemKind, FileViewMode } from '../../../../models/file-ma
           >
             <h2 class="text-lg font-semibold mb-2">{{ d.name }}</h2>
             <dl class="space-y-2 text-sm text-muted-foreground">
-              <div><dt class="inline font-medium text-foreground">Type:</dt> {{ d.itemKind }}</div>
-              <div><dt class="inline font-medium text-foreground">Size:</dt> {{ displaySize(d) }}</div>
+              <div>
+                <dt class="inline font-medium text-foreground">Type:</dt>
+                {{ d.itemKind }}
+              </div>
+              <div>
+                <dt class="inline font-medium text-foreground">Size:</dt>
+                {{ displaySize(d) }}
+              </div>
               <div>
                 <dt class="inline font-medium text-foreground">Modified:</dt>
-                {{ (d.lastModifiedAt ?? d.createdAt) | date: 'medium' }}
+                {{ d.lastModifiedAt ?? d.createdAt | date: 'medium' }}
               </div>
-              <div><dt class="inline font-medium text-foreground">Shared:</dt> {{ d.isShared ? 'Yes' : 'No' }}</div>
+              <div>
+                <dt class="inline font-medium text-foreground">Shared:</dt>
+                {{ d.isShared ? 'Yes' : 'No' }}
+              </div>
             </dl>
-            <button hlmBtn class="mt-4 w-full" variant="outline" type="button" (click)="detailsItem.set(null)">
+            <button
+              hlmBtn
+              class="mt-4 w-full"
+              variant="outline"
+              type="button"
+              (click)="detailsItem.set(null)"
+            >
               Close
             </button>
           </div>
@@ -492,7 +549,9 @@ import { FileItem, FileItemKind, FileViewMode } from '../../../../models/file-ma
               }
             </div>
             <div class="mt-6 flex justify-end gap-3 pt-2">
-              <button hlmBtn variant="outline" type="button" (click)="closeCreateFolderModal()">Cancel</button>
+              <button hlmBtn variant="outline" type="button" (click)="closeCreateFolderModal()">
+                Cancel
+              </button>
               <button
                 hlmBtn
                 type="button"
@@ -547,7 +606,7 @@ export class MyFilesComponent {
   private _searchDebounce: ReturnType<typeof setTimeout> | null = null;
 
   readonly totalPages = computed(() =>
-    Math.max(1, Math.ceil(this.totalCount() / this.pageSize()) || 1),
+    Math.max(1, Math.ceil(this.totalCount() / this.pageSize()) || 1)
   );
 
   readonly typeFilterLabel = computed(() => {
@@ -563,7 +622,9 @@ export class MyFilesComponent {
     this._route.paramMap
       .pipe(startWith(this._route.snapshot.paramMap), takeUntilDestroyed(this._destroyRef))
       .subscribe(() => {
-        this.breadcrumbs.set(this._parseBreadcrumbParam(this._route.snapshot.paramMap.get('folderId')));
+        this.breadcrumbs.set(
+          this._parseBreadcrumbParam(this._route.snapshot.paramMap.get('folderId'))
+        );
         this.currentPage.set(1);
         this.load();
       });
@@ -633,7 +694,7 @@ export class MyFilesComponent {
   }
 
   toggleSort(): void {
-    this.sortDesc.update(v => !v);
+    this.sortDesc.update((v) => !v);
     this.load();
   }
 
@@ -648,11 +709,11 @@ export class MyFilesComponent {
     this.load();
   }
   goPrev(): void {
-    this.currentPage.update(p => Math.max(1, p - 1));
+    this.currentPage.update((p) => Math.max(1, p - 1));
     this.load();
   }
   goNext(): void {
-    this.currentPage.update(p => Math.min(this.totalPages(), p + 1));
+    this.currentPage.update((p) => Math.min(this.totalPages(), p + 1));
     this.load();
   }
   goLast(): void {
@@ -677,7 +738,7 @@ export class MyFilesComponent {
   }
 
   toggleRowMenu(id: string): void {
-    this.rowMenuId.update(cur => (cur === id ? null : id));
+    this.rowMenuId.update((cur) => (cur === id ? null : id));
   }
 
   openDetails(item: FileItem): void {
@@ -689,9 +750,7 @@ export class MyFilesComponent {
     this.rowMenuId.set(null);
     const name = prompt('New name', item.name);
     if (!name || name === item.name) return;
-    this.files.update(list =>
-      list.map(f => (f.fileId === item.fileId ? { ...f, name } : f)),
-    );
+    this.files.update((list) => list.map((f) => (f.fileId === item.fileId ? { ...f, name } : f)));
   }
 
   deleteItem(item: FileItem): void {
@@ -805,7 +864,7 @@ export class MyFilesComponent {
         pageNo: this.currentPage(),
         pageSize: this.pageSize(),
       })
-      .subscribe(res => {
+      .subscribe((res) => {
         this.files.set(res.items);
         this.totalCount.set(res.totalCount);
       });

@@ -16,7 +16,7 @@ export function mapResourceToTimelineCategory(resource: string): string {
 export function groupActivityLogsByDate(logs: ActivityLog[]): ActivityGroup[] {
   const map = new Map<string, ActivityItem[]>();
   const sorted = [...logs].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
   for (const log of sorted) {
     const d = new Date(log.createdAt);
@@ -39,12 +39,17 @@ export function groupActivityLogsByDate(logs: ActivityLog[]): ActivityGroup[] {
 }
 
 /** Merge static timeline groups with API-derived groups (same calendar day → one group). */
-export function mergeActivityGroups(staticData: ActivityGroup[], apiGroups: ActivityGroup[]): ActivityGroup[] {
+export function mergeActivityGroups(
+  staticData: ActivityGroup[],
+  apiGroups: ActivityGroup[]
+): ActivityGroup[] {
   if (apiGroups.length === 0) return staticData;
   const map = new Map<string, ActivityItem[]>();
   const push = (g: ActivityGroup) => {
     const list = map.get(g.date) ?? [];
-    list.push(...g.items.map(({ time, category, description }) => ({ time, category, description })));
+    list.push(
+      ...g.items.map(({ time, category, description }) => ({ time, category, description }))
+    );
     map.set(g.date, list);
   };
   for (const g of staticData) push(g);

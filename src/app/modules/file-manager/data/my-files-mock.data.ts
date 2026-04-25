@@ -7,7 +7,7 @@ function row(
   fileId: string,
   name: string,
   itemKind: FileItemKind,
-  opts: { isShared?: boolean; lastModified?: string; sizeLabel?: string } = {},
+  opts: { isShared?: boolean; lastModified?: string; sizeLabel?: string } = {}
 ): FileItem {
   const isFolder = itemKind === 'Folder';
   const last = opts.lastModified ?? '2025-02-01T12:00:00.000Z';
@@ -40,14 +40,29 @@ function row(
 export const MY_FILES_ROOT_MOCK: FileItem[] = [
   row('1', 'Meeting Notes', 'Folder', { lastModified: '2025-02-01T08:00:00.000Z' }),
   row('2', 'Research Data', 'Folder', { lastModified: '2025-02-01T08:00:00.000Z' }),
-  row('3', 'Client Documents', 'Folder', { isShared: true, lastModified: '2025-02-01T08:00:00.000Z' }),
+  row('3', 'Client Documents', 'Folder', {
+    isShared: true,
+    lastModified: '2025-02-01T08:00:00.000Z',
+  }),
   row('4', 'Project Files', 'Folder', { isShared: true, lastModified: '2025-02-01T08:00:00.000Z' }),
   row('5', 'Design Assets', 'Folder', { isShared: true, lastModified: '2025-02-01T08:00:00.000Z' }),
-  row('6', 'Project Documents.doc', 'File', { isShared: true, lastModified: '2025-02-01T08:00:00.000Z' }),
+  row('6', 'Project Documents.doc', 'File', {
+    isShared: true,
+    lastModified: '2025-02-01T08:00:00.000Z',
+  }),
   row('7', 'Image.jpg', 'Image', { lastModified: '2025-02-01T08:00:00.000Z' }),
-  row('8', 'Chill Beats Mix.mp3', 'Audio', { isShared: true, lastModified: '2025-02-01T08:00:00.000Z' }),
-  row('9', 'Adventure_Video.mp4', 'Video', { isShared: true, lastModified: '2025-02-01T08:00:00.000Z' }),
-  row('10', 'Requirements.doc', 'File', { isShared: true, lastModified: '2025-02-01T08:00:00.000Z' }),
+  row('8', 'Chill Beats Mix.mp3', 'Audio', {
+    isShared: true,
+    lastModified: '2025-02-01T08:00:00.000Z',
+  }),
+  row('9', 'Adventure_Video.mp4', 'Video', {
+    isShared: true,
+    lastModified: '2025-02-01T08:00:00.000Z',
+  }),
+  row('10', 'Requirements.doc', 'File', {
+    isShared: true,
+    lastModified: '2025-02-01T08:00:00.000Z',
+  }),
   row('11', 'Marketing Assets', 'Folder', {
     isShared: true,
     lastModified: '2025-02-01T08:00:00.000Z',

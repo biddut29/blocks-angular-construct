@@ -32,7 +32,7 @@ function withCreds(): boolean {
 
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
-  next: HttpHandlerFn,
+  next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
   const authStore = inject(AuthStore);
   const httpBackend = inject(HttpBackend);
@@ -56,7 +56,7 @@ export const authInterceptor: HttpInterceptorFn = (
         return handle401Error(authReq, next, authStore, rawHttp);
       }
       return throwError(() => error);
-    }),
+    })
   );
 };
 
@@ -64,22 +64,22 @@ function handle401Error(
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
   authStore: AuthStore,
-  rawHttp: HttpClient,
+  rawHttp: HttpClient
 ): Observable<HttpEvent<unknown>> {
   if (isRefreshing) {
     return refreshTokenSubject.pipe(
-      filter(t => t !== null),
+      filter((t) => t !== null),
       take(1),
-      switchMap(newAccess =>
+      switchMap((newAccess) =>
         next(
           req.clone({
             setHeaders: {
               Authorization: `Bearer ${newAccess}`,
               'x-blocks-key': environment.xBlocksKey,
             },
-          }),
-        ),
-      ),
+          })
+        )
+      )
     );
   }
 
@@ -99,7 +99,8 @@ function handle401Error(
   body.set('grant_type', 'refresh_token');
   body.set('refresh_token', refreshToken);
 
-  const orgId = typeof window !== 'undefined' ? window.localStorage.getItem('selected-org-id') : null;
+  const orgId =
+    typeof window !== 'undefined' ? window.localStorage.getItem('selected-org-id') : null;
   if (orgId) {
     body.set('org_id', orgId);
   }
@@ -113,7 +114,7 @@ function handle401Error(
       withCredentials: withCreds(),
     })
     .pipe(
-      switchMap(res => {
+      switchMap((res) => {
         if (res.refresh_token) {
           authStore.setTokens({
             accessToken: res.access_token,
@@ -129,16 +130,16 @@ function handle401Error(
               Authorization: `Bearer ${res.access_token}`,
               'x-blocks-key': environment.xBlocksKey,
             },
-          }),
+          })
         );
       }),
-      catchError(err => {
+      catchError((err) => {
         authStore.logout();
         refreshTokenSubject.next(null);
         return throwError(() => err);
       }),
       finalize(() => {
         isRefreshing = false;
-      }),
+      })
     );
 }

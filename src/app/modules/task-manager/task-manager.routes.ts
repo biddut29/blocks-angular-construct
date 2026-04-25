@@ -4,6 +4,6 @@ export const TASK_MANAGER_ROUTES: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./pages/task-manager/task-manager.component').then(m => m.TaskManagerComponent),
+      import('./pages/task-manager/task-manager.component').then((m) => m.TaskManagerComponent),
   },
 ];

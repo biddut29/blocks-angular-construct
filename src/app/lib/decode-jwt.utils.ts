@@ -12,8 +12,8 @@ export function decodeJWT(token: string): { org_id?: string } | null {
     const jsonPayload = decodeURIComponent(
       atob(base64)
         .split('')
-        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(''),
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
     );
     return JSON.parse(jsonPayload) as { org_id?: string };
   } catch {
