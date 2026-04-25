@@ -4,6 +4,11 @@
     "MARK_ALL_READ": "Mark all as read",
     "NO_NOTIFICATIONS": "No notifications"
   },
+  "INVOICE": {
+    "SEND_TITLE": "Send invoice?",
+    "SEND_DESC": "This will save the invoice and immediately send it to the customer via email. Are you sure you want to continue?",
+    "SENT_BANNER": "Invoice sent successfully."
+  },
   "IAM": {
     "TITLE": "Identity Access Management",
     "ADD_USER": "Add User",

@@ -4,6 +4,11 @@
     "MARK_ALL_READ": "Alle als gelesen markieren",
     "NO_NOTIFICATIONS": "Keine Benachrichtigungen"
   },
+  "INVOICE": {
+    "SEND_TITLE": "Rechnung senden?",
+    "SEND_DESC": "Die Rechnung wird gespeichert und sofort per E-Mail an die Kundin bzw. den Kunden gesendet. Möchten Sie fortfahren?",
+    "SENT_BANNER": "Rechnung wurde gesendet."
+  },
   "IAM": {
     "TITLE": "Identity Access Management",
     "ADD_USER": "Benutzer hinzufügen",

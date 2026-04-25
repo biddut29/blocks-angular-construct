@@ -19,10 +19,23 @@ export interface GraphQLMutation<TVariables = Record<string, unknown>> {
   variables?: TVariables;
 }
 
+/**
+ * UDS data gateway path — same as React `src/lib/graphql-client.ts`:
+ * `${apiBaseUrl}/uds/v1/${projectSlug}/gateway`
+ */
+function udsGraphqlGatewayUrl(apiBaseUrl: string, projectSlug: string | undefined): string {
+  const clean = apiBaseUrl.endsWith('/') ? apiBaseUrl.slice(0, -1) : apiBaseUrl;
+  const slug = projectSlug ? `/${projectSlug}` : '';
+  return `${clean}/uds/v1${slug}/gateway`;
+}
+
 @Injectable({ providedIn: 'root' })
 export class GraphQLService {
   private readonly _http = inject(HttpService);
-  private readonly _endpoint = `${environment.apiBaseUrl}/graphql`;
+  private readonly _endpoint = udsGraphqlGatewayUrl(
+    environment.apiBaseUrl,
+    environment.projectSlug
+  );
 
   // ── Query (read) ───────────────────────────────────────────────────────────
   query<T>(options: GraphQLQuery): Observable<T> {
