@@ -1,8 +1,7 @@
-/** Local / default — used by `ng serve` (development build). */
+import { appConfig } from './environment.config';
+
+/** Local / default — used by `ng serve` (development). Values come from `appConfig` in `environment.config.ts` (regenerate with `npm run env:apply`). */
 export const environment = {
+  ...appConfig,
   production: false,
-  blocksApiUrl: 'https://dev-api.seliseblocks.com',
-  apiBaseUrl: 'https://dev-api.seliseblocks.com',
-  xBlocksKey: 'D95fcffa2444a4c808f9187f77e700e6d',
-  projectSlug: 'dxogbs',
-};
+} as const;

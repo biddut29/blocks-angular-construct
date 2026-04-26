@@ -1,8 +1,7 @@
-/** Production build — swapped in via `angular.json` → `fileReplacements`. */
+import { appConfig } from './environment.config';
+
+/** Swapped in via `angular.json` for production. Regenerate `environment.config.ts` (e.g. `npm run env:apply -- prod`) before release builds. */
 export const environment = {
+  ...appConfig,
   production: true,
-  apiBaseUrl: 'https://dev-api.seliseblocks.com',
-  blocksApiUrl: 'https://dev-api.seliseblocks.com',
-  xBlocksKey: 'D6241ddafbef647b8bfa303785298e5b3',
-  projectSlug: 'dbmvyb',
-};
+} as const;
