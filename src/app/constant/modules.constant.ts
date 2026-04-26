@@ -1,6 +1,11 @@
 // ─── Module / Feature Flag Constants ──────────────────────────────────────────
 // Mirrors: src/constant/modules.constants.ts in React project
 
+/** File upload `moduleName` for GetPreSignedUrl (mirrors React `ModuleName.DefaultConstruct = 8`). */
+export enum FileStorageModuleName {
+  DefaultConstruct = 8,
+}
+
 export const MODULES = {
   DASHBOARD: 'dashboard',
   FINANCE: 'finance',
